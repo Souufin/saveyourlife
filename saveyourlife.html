@@ -1,0 +1,2067 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>SaveYourLife</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #f4f7f2;
+        --surface: #ffffff;
+        --surface-2: #eaf1e7;
+        --ink: #15211a;
+        --muted: #5a6c5f;
+        --line: #d9e4d8;
+        --brand: #177245;
+        --brand-deep: #0d4d2c;
+        --brand-soft: #e2f2e6;
+        --accent: #dd9426;
+        --accent-soft: #fbf0da;
+        --danger: #bc3f2e;
+        --ring-track: #e0eadd;
+        --shadow: 0 10px 30px rgba(21, 51, 32, 0.08);
+        --radius-card: 20px;
+        --radius-ctl: 12px;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0a110d;
+          --surface: #131d16;
+          --surface-2: #1a271e;
+          --ink: #e8f1e9;
+          --muted: #9db3a3;
+          --line: #27392c;
+          --brand: #43b273;
+          --brand-deep: #8fdcae;
+          --brand-soft: #173324;
+          --accent: #eda63e;
+          --accent-soft: #33270f;
+          --danger: #e07a68;
+          --ring-track: #223128;
+          --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+        }
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        font-family: "Rubik", system-ui, -apple-system, "Segoe UI", sans-serif;
+        background: var(--bg);
+        color: var(--ink);
+        -webkit-font-smoothing: antialiased;
+        padding-bottom: 92px;
+      }
+      @media (min-width: 860px) { body { padding-bottom: 40px; } }
+      button, input, select { font-family: inherit; }
+      button { cursor: pointer; }
+      :focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+
+      .wrap { max-width: 1060px; margin: 0 auto; padding: 0 16px; }
+
+      /* ---------- top bar ---------- */
+      .topbar {
+        position: sticky; top: 0; z-index: 40;
+        background: color-mix(in srgb, var(--bg) 88%, transparent);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid var(--line);
+      }
+      .topbar-in {
+        display: flex; align-items: center; gap: 10px;
+        padding: 10px 0; flex-wrap: wrap;
+      }
+      .datenav { display: flex; align-items: center; gap: 6px; margin-inline-end: auto; }
+      .datenav .dlabel { font-weight: 700; font-size: 17px; min-width: 128px; text-align: center; }
+      .iconbtn {
+        width: 38px; height: 38px; border-radius: 50%;
+        border: 1px solid var(--line); background: var(--surface);
+        display: inline-flex; align-items: center; justify-content: center;
+        color: var(--ink); flex: none;
+      }
+      .iconbtn svg { width: 18px; height: 18px; }
+      .todaybtn {
+        border: 1px solid var(--line); background: var(--surface); color: var(--brand-deep);
+        font-weight: 600; font-size: 13px; border-radius: 999px; padding: 8px 14px;
+      }
+      .langseg {
+        display: flex; background: var(--surface-2); border-radius: 999px; padding: 3px; gap: 2px;
+      }
+      .langseg button {
+        border: 0; background: transparent; color: var(--muted);
+        font-weight: 600; font-size: 13px; padding: 6px 12px; border-radius: 999px;
+      }
+      .langseg button.on { background: var(--surface); color: var(--brand-deep); box-shadow: 0 1px 4px rgba(0,0,0,.12); }
+
+      /* ---------- tabs ---------- */
+      .tabs {
+        position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
+        background: var(--surface); border-top: 1px solid var(--line);
+        display: flex; justify-content: space-around;
+        padding: 8px 6px calc(8px + env(safe-area-inset-bottom));
+      }
+      .tabs button {
+        border: 0; background: transparent; color: var(--muted);
+        display: flex; flex-direction: column; align-items: center; gap: 3px;
+        font-size: 11px; font-weight: 600; padding: 4px 8px; border-radius: 12px; min-width: 58px;
+      }
+      .tabs button svg { width: 22px; height: 22px; }
+      .tabs button.on { color: var(--brand); }
+      @media (min-width: 860px) {
+        .tabs {
+          position: static; border: 0; background: transparent;
+          justify-content: flex-start; gap: 6px; padding: 16px 0 0;
+        }
+        .tabs button {
+          flex-direction: row; gap: 8px; font-size: 14px; padding: 10px 16px;
+          border: 1px solid var(--line); background: var(--surface);
+        }
+        .tabs button.on { background: var(--brand-soft); border-color: var(--brand); }
+      }
+
+      /* ---------- layout / cards ---------- */
+      main { padding-top: 18px; }
+      .view { display: none; }
+      .view.on { display: block; }
+      .card {
+        background: var(--surface); border: 1px solid var(--line);
+        border-radius: var(--radius-card); box-shadow: var(--shadow);
+        padding: 20px; margin-bottom: 16px;
+      }
+      .card h2 { margin: 0 0 4px; font-size: 19px; font-weight: 700; }
+      .card .sub { color: var(--muted); font-size: 13.5px; margin: 0 0 14px; line-height: 1.5; }
+      .grid2 { display: grid; gap: 16px; }
+      @media (min-width: 860px) { .grid2 { grid-template-columns: 1fr 1fr; } .grid2 > .card { margin-bottom: 0; } .grid2 { margin-bottom: 16px; } }
+
+      /* ---------- ring ---------- */
+      .ringflex { display: flex; gap: 22px; align-items: center; flex-wrap: wrap; }
+      .ringbox { position: relative; width: 196px; height: 196px; flex: none; margin: 0 auto; }
+      .ringbox svg { transform: rotate(-90deg); }
+      .ringcenter {
+        position: absolute; inset: 0; display: flex; flex-direction: column;
+        align-items: center; justify-content: center; text-align: center;
+      }
+      .ringcenter .big { font-size: 42px; font-weight: 800; line-height: 1; letter-spacing: -0.5px; }
+      .ringcenter .cap { font-size: 12.5px; color: var(--muted); font-weight: 600; margin-top: 5px; }
+      .ringstats { flex: 1; min-width: 210px; display: grid; gap: 12px; }
+      .rstat { display: flex; align-items: baseline; gap: 8px; }
+      .rstat .n { font-size: 21px; font-weight: 700; }
+      .rstat .l { color: var(--muted); font-size: 13.5px; font-weight: 500; }
+      .rstat .dot { width: 10px; height: 10px; border-radius: 3px; flex: none; align-self: center; }
+
+      .macro { margin-top: 6px; }
+      .macro .mrow { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; margin-bottom: 5px; }
+      .macro .mrow span:last-child { color: var(--muted); font-weight: 500; }
+      .bar { height: 9px; border-radius: 99px; background: var(--ring-track); overflow: hidden; margin-bottom: 13px; }
+      .bar i { display: block; height: 100%; border-radius: 99px; transition: width .4s ease; }
+      @media (prefers-reduced-motion: reduce) { .bar i { transition: none; } }
+
+      /* ---------- diary ---------- */
+      .mealhead { display: flex; align-items: center; gap: 10px; margin: 20px 0 8px; }
+      .mealhead:first-of-type { margin-top: 4px; }
+      .mealhead h3 { margin: 0; font-size: 16px; font-weight: 700; }
+      .mealhead .mkcal { color: var(--muted); font-size: 13px; font-weight: 600; }
+      .mealhead .addbtn { margin-inline-start: auto; }
+      .addbtn {
+        border: 1px solid var(--brand); color: var(--brand-deep); background: var(--brand-soft);
+        font-weight: 700; font-size: 13px; border-radius: 999px; padding: 7px 14px;
+        display: inline-flex; align-items: center; gap: 6px;
+      }
+      .addbtn svg { width: 14px; height: 14px; }
+      .entry {
+        display: flex; align-items: center; gap: 10px;
+        padding: 10px 12px; border: 1px solid var(--line); border-radius: 14px; margin-bottom: 8px;
+        background: var(--surface);
+      }
+      .entry img.thumb { width: 42px; height: 42px; border-radius: 10px; object-fit: cover; flex: none; }
+      .entry .en { flex: 1; min-width: 0; }
+      .entry .en b { display: block; font-size: 14.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .entry .en small { color: var(--muted); font-size: 12.5px; }
+      .entry .ek { font-weight: 700; font-size: 14.5px; white-space: nowrap; }
+      .entry .del {
+        border: 0; background: transparent; color: var(--muted); padding: 6px; border-radius: 8px; flex: none;
+      }
+      .entry .del svg { width: 16px; height: 16px; display: block; }
+      .empty { color: var(--muted); font-size: 13.5px; padding: 4px 2px 8px; }
+
+      /* ---------- water ---------- */
+      .waterrow { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+      .drops { display: flex; gap: 5px; flex-wrap: wrap; }
+      .drops svg { width: 21px; height: 27px; }
+      .wbtns { display: flex; gap: 8px; margin-inline-start: auto; }
+      .wbtns button {
+        border: 1px solid var(--line); background: var(--surface-2); color: var(--ink);
+        font-weight: 700; font-size: 13px; border-radius: 999px; padding: 8px 14px;
+      }
+
+      /* ---------- forms ---------- */
+      .field { margin-bottom: 14px; }
+      .field label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+      .field input, .field select {
+        width: 100%; padding: 12px 13px; border-radius: var(--radius-ctl);
+        border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+        font-size: 15.5px;
+      }
+      .frow { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+      @media (max-width: 480px) { .frow { grid-template-columns: 1fr; } }
+      .segwrap { display: flex; gap: 8px; flex-wrap: wrap; }
+      .segwrap button {
+        border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+        border-radius: 999px; padding: 9px 15px; font-weight: 600; font-size: 13.5px;
+      }
+      .segwrap button.on { background: var(--brand); border-color: var(--brand); color: #fff; }
+      @media (prefers-color-scheme: dark) { .segwrap button.on { color: #08130c; } }
+      .btn {
+        border: 0; border-radius: 999px; padding: 13px 22px;
+        background: var(--brand); color: #fff; font-weight: 700; font-size: 15px;
+        display: inline-flex; align-items: center; gap: 8px; justify-content: center;
+      }
+      @media (prefers-color-scheme: dark) { .btn { color: #08130c; } }
+      .btn.ghost { background: var(--surface-2); color: var(--ink); border: 1px solid var(--line); }
+      .btn.accent { background: var(--accent); color: #231600; }
+      .btn svg { width: 18px; height: 18px; }
+      .btn:disabled { opacity: .55; cursor: default; }
+      .btnrow { display: flex; gap: 10px; flex-wrap: wrap; }
+      .resultbox {
+        background: var(--brand-soft); border-radius: 14px; padding: 16px; margin-top: 6px;
+      }
+      .resultbox .big { font-size: 30px; font-weight: 800; }
+      .note { font-size: 12.5px; color: var(--muted); line-height: 1.6; margin-top: 12px; }
+      .note a { color: var(--brand-deep); }
+
+      /* ---------- add food ---------- */
+      .toolrow { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+      @media (max-width: 520px) { .toolrow { grid-template-columns: 1fr; } }
+      .tool {
+        border: 1.5px solid var(--line); background: var(--surface); border-radius: 16px;
+        padding: 16px; display: flex; gap: 13px; align-items: center; text-align: start; width: 100%;
+      }
+      .tool .tic {
+        width: 46px; height: 46px; border-radius: 13px; flex: none;
+        display: flex; align-items: center; justify-content: center;
+        background: var(--brand-soft); color: var(--brand-deep);
+      }
+      .tool .tic.amber { background: var(--accent-soft); color: #8a5b10; }
+      @media (prefers-color-scheme: dark) { .tool .tic.amber { color: var(--accent); } }
+      .tool .tic svg { width: 24px; height: 24px; }
+      .tool b { display: block; font-size: 15px; }
+      .tool small { color: var(--muted); font-size: 12.5px; line-height: 1.45; display: block; margin-top: 2px; }
+      .searchrow { display: flex; gap: 8px; }
+      .searchrow input {
+        flex: 1; padding: 12px 14px; border-radius: var(--radius-ctl);
+        border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-size: 15.5px; min-width: 0;
+      }
+      .foodgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(158px, 1fr)); gap: 10px; margin-top: 14px; }
+      .food {
+        border: 1px solid var(--line); background: var(--surface); border-radius: 14px;
+        padding: 12px; text-align: start; width: 100%;
+      }
+      .food b { display: block; font-size: 14px; font-weight: 600; line-height: 1.35; }
+      .food small { color: var(--muted); font-size: 12px; display: block; margin-top: 3px; }
+      .food .fk { color: var(--brand-deep); font-weight: 700; font-size: 13px; margin-top: 6px; display: block; }
+      .status { font-size: 13px; color: var(--muted); margin-top: 10px; min-height: 18px; }
+
+      /* ---------- activity ---------- */
+      .exgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; }
+      .excard { border: 1px solid var(--line); border-radius: 14px; padding: 13px; background: var(--surface); }
+      .excard b { font-size: 14.5px; display: block; }
+      .excard small { color: var(--muted); font-size: 12px; }
+      .excard .exrow { display: flex; gap: 6px; margin-top: 10px; }
+      .excard input {
+        width: 64px; padding: 8px; border-radius: 9px; border: 1px solid var(--line);
+        background: var(--surface); color: var(--ink); font-size: 14px;
+      }
+      .excard .exrow button {
+        flex: 1; border: 0; border-radius: 9px; background: var(--brand-soft); color: var(--brand-deep);
+        font-weight: 700; font-size: 13px; padding: 8px 4px;
+      }
+
+      /* ---------- modal ---------- */
+      .overlay {
+        position: fixed; inset: 0; z-index: 90; background: rgba(8, 16, 10, 0.55);
+        display: none; align-items: flex-end; justify-content: center; padding: 0;
+      }
+      .overlay.on { display: flex; }
+      .sheet {
+        background: var(--surface); width: 100%; max-width: 560px; max-height: 92vh; overflow-y: auto;
+        border-radius: 22px 22px 0 0; padding: 20px 20px calc(20px + env(safe-area-inset-bottom));
+      }
+      @media (min-width: 700px) { .overlay { align-items: center; padding: 20px; } .sheet { border-radius: 22px; } }
+      .sheet h3 { margin: 0 0 6px; font-size: 18px; }
+      .sheet .sub { color: var(--muted); font-size: 13.5px; line-height: 1.55; margin: 0 0 14px; }
+      .sheet .x { float: inline-end; }
+      [dir="rtl"] .sheet .x { float: left; }
+      #scanner { width: 100%; border-radius: 14px; overflow: hidden; background: #000; min-height: 40px; }
+      #scanner video { width: 100% !important; height: auto !important; }
+      .mealphoto { width: 100%; border-radius: 14px; display: block; margin-bottom: 12px; }
+      .detect {
+        border: 1px solid var(--line); border-radius: 14px; padding: 12px; margin-bottom: 10px;
+        display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+      }
+      .detect .dn { flex: 1; min-width: 130px; }
+      .detect .dn b { font-size: 14.5px; display: block; }
+      .detect .dn small { color: var(--muted); font-size: 12px; }
+      .detect input {
+        width: 76px; padding: 9px; border-radius: 9px; border: 1px solid var(--line);
+        background: var(--surface); color: var(--ink); font-size: 14px;
+      }
+      .detect button {
+        border: 0; border-radius: 9px; background: var(--brand); color: #fff; font-weight: 700;
+        font-size: 13px; padding: 10px 14px;
+      }
+      @media (prefers-color-scheme: dark) { .detect button { color: #08130c; } }
+      .spinner {
+        width: 34px; height: 34px; border-radius: 50%; margin: 18px auto;
+        border: 4px solid var(--ring-track); border-top-color: var(--brand);
+        animation: spin 0.9s linear infinite;
+      }
+      @keyframes spin { to { transform: rotate(360deg); } }
+      @media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 2.4s; } }
+
+      /* ---------- progress ---------- */
+      .chartbox { width: 100%; overflow: hidden; }
+      .chartbox svg { width: 100%; height: auto; display: block; }
+      .statgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+      .statgrid .sc { background: var(--surface-2); border-radius: 14px; padding: 14px 12px; text-align: center; }
+      .statgrid .sc .n { font-size: 21px; font-weight: 800; display: block; }
+      .statgrid .sc .l { font-size: 12px; color: var(--muted); font-weight: 600; }
+
+      /* ---------- premium tools ---------- */
+      .frow3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+      @media (max-width: 480px) { .frow3 { grid-template-columns: 1fr; } }
+      .dayrow { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+      .dayrow label { flex: 1; font-size: 14px; font-weight: 600; }
+      .dayrow input {
+        width: 110px; padding: 10px 12px; border-radius: var(--radius-ctl);
+        border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-size: 15px;
+      }
+      .dayrow span { color: var(--muted); font-size: 13px; font-weight: 600; }
+      .fastclock { font-size: 42px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.1; }
+
+      .toast {
+        position: fixed; left: 50%; transform: translateX(-50%) translateY(20px);
+        bottom: 108px; z-index: 120; background: var(--ink); color: var(--bg);
+        padding: 12px 20px; border-radius: 999px; font-weight: 600; font-size: 14px;
+        opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s;
+        max-width: calc(100vw - 32px); text-align: center;
+      }
+      @media (min-width: 860px) { .toast { bottom: 28px; } }
+      .toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
+      .hidden { display: none !important; }
+    </style>
+  </head>
+  <body>
+    <div class="topbar">
+      <div class="wrap topbar-in">
+        <div class="datenav">
+          <button class="iconbtn" id="prevDay" aria-label="Previous day">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+          </button>
+          <div class="dlabel" id="dateLabel">—</div>
+          <button class="iconbtn" id="nextDay" aria-label="Next day">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
+          </button>
+          <button class="todaybtn" id="todayBtn" data-i18n="today">Today</button>
+        </div>
+        <div class="langseg" role="group" aria-label="Language">
+          <button data-lang="en">EN</button>
+          <button data-lang="de">DE</button>
+          <button data-lang="ar">عربي</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="wrap">
+      <nav class="tabs" id="tabs">
+        <button data-view="today" class="on">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+          <span data-i18n="tabToday">Today</span>
+        </button>
+        <button data-view="add">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg>
+          <span data-i18n="tabAdd">Add food</span>
+        </button>
+        <button data-view="activity">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1 3-2 4.5-2 7a4.5 4.5 0 0 0 9 0c0-1.5-.5-2.5-1.2-3.7C17.5 7.5 16 9 15 9c.3-2-.8-4.5-3-6z"/><path d="M9.5 13.5A4.5 4.5 0 1 0 14 21"/></svg>
+          <span data-i18n="tabActivity">Activity</span>
+        </button>
+        <button data-view="progress">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2" transform="translate(-1 0)"/></svg>
+          <span data-i18n="tabProgress">Progress</span>
+        </button>
+        <button data-view="goal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="0.5" fill="currentColor"/></svg>
+          <span data-i18n="tabGoal">My goal</span>
+        </button>
+      </nav>
+
+      <main>
+        <!-- ============ TODAY ============ -->
+        <section class="view on" id="view-today">
+          <div class="card" id="setupNudge">
+            <h2 data-i18n="nudgeTitle">Set your daily goal first</h2>
+            <p class="sub" data-i18n="nudgeText">Enter your age, weight, height, activity and goal — SaveYourLife calculates your personal daily calorie target.</p>
+            <button class="btn" id="nudgeBtn" data-i18n="nudgeBtn">Calculate my goal</button>
+          </div>
+
+          <div class="card hidden" id="ringCard">
+            <div class="ringflex">
+              <div class="ringbox">
+                <svg width="196" height="196" viewBox="0 0 196 196">
+                  <circle cx="98" cy="98" r="84" fill="none" stroke="var(--ring-track)" stroke-width="15"/>
+                  <circle id="ringArc" cx="98" cy="98" r="84" fill="none" stroke="var(--brand)" stroke-width="15" stroke-linecap="round" stroke-dasharray="527.8" stroke-dashoffset="527.8"/>
+                </svg>
+                <div class="ringcenter">
+                  <div class="big" id="ringNum">0</div>
+                  <div class="cap" data-i18n="remaining">kcal remaining</div>
+                </div>
+              </div>
+              <div class="ringstats">
+                <div class="rstat"><span class="dot" style="background:var(--brand)"></span><span class="n" id="stGoal">0</span><span class="l" data-i18n="stGoal">Daily goal</span></div>
+                <div class="rstat"><span class="dot" style="background:var(--accent)"></span><span class="n" id="stEaten">0</span><span class="l" data-i18n="stEaten">Eaten</span></div>
+                <div class="rstat"><span class="dot" style="background:#4d7fb8"></span><span class="n" id="stBurned">0</span><span class="l" data-i18n="stBurned">Burned (activity)</span></div>
+                <div class="macro">
+                  <div class="mrow"><span data-i18n="carbs">Carbs</span><span id="mCarbsT">0 / 0 g</span></div>
+                  <div class="bar"><i id="mCarbs" style="background:#dd9426;width:0%"></i></div>
+                  <div class="mrow"><span data-i18n="protein">Protein</span><span id="mProtT">0 / 0 g</span></div>
+                  <div class="bar"><i id="mProt" style="background:#177245;width:0%"></i></div>
+                  <div class="mrow"><span data-i18n="fat">Fat</span><span id="mFatT">0 / 0 g</span></div>
+                  <div class="bar"><i id="mFat" style="background:#4d7fb8;width:0%"></i></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2 data-i18n="diaryTitle">Food diary</h2>
+            <p class="sub" data-i18n="diaryText">Everything you eat today, by meal.</p>
+            <div id="diary"></div>
+          </div>
+
+          <div class="grid2">
+            <div class="card">
+              <h2 data-i18n="waterTitle">Water</h2>
+              <p class="sub"><span id="waterMl">0</span> ml · <span data-i18n="waterGoal">goal</span> 2000 ml</p>
+              <div class="waterrow">
+                <div class="drops" id="drops"></div>
+                <div class="wbtns">
+                  <button id="waterMinus">−250</button>
+                  <button id="waterPlus">+250 ml</button>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <h2 data-i18n="exTitle">Activity today</h2>
+              <p class="sub" data-i18n="exText">Burned calories are added back to your daily budget.</p>
+              <div id="todayExercises"></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2 data-i18n="fastTitle">Intermittent fasting</h2>
+            <p class="sub" data-i18n="fastText">Pick a fasting window and start the timer. It keeps counting while you use the app, even across days.</p>
+            <div id="fastIdle">
+              <div class="segwrap" id="fastSeg" style="margin-bottom:14px">
+                <button data-fast="14">14:10</button>
+                <button data-fast="16" class="on">16:8</button>
+                <button data-fast="18">18:6</button>
+                <button data-fast="20">20:4</button>
+              </div>
+              <button class="btn" id="fastStart" data-i18n="fastStart">Start fast</button>
+            </div>
+            <div id="fastActive" class="hidden">
+              <div class="fastclock" id="fastClock">00:00:00</div>
+              <p class="sub" id="fastState" style="margin:6px 0 10px"></p>
+              <div class="bar" style="height:12px"><i id="fastBar" style="background:var(--accent);width:0%"></i></div>
+              <button class="btn ghost" id="fastStop" data-i18n="fastStop">End fast</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ ADD FOOD ============ -->
+        <section class="view" id="view-add">
+          <div class="card">
+            <h2 data-i18n="addTitle">Add food</h2>
+            <p class="sub" data-i18n="addText">Choose the meal, then search, scan a barcode, or photograph your plate.</p>
+            <div class="field">
+              <label data-i18n="mealLabel">Meal</label>
+              <div class="segwrap" id="mealSeg">
+                <button data-meal="breakfast" data-i18n="breakfast">Breakfast</button>
+                <button data-meal="lunch" data-i18n="lunch">Lunch</button>
+                <button data-meal="dinner" data-i18n="dinner">Dinner</button>
+                <button data-meal="snack" data-i18n="snack">Snack</button>
+              </div>
+            </div>
+            <div class="toolrow">
+              <button class="tool" id="openScan">
+                <span class="tic">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7V5a1 1 0 0 1 1-1h2M17 4h2a1 1 0 0 1 1 1v2M20 17v2a1 1 0 0 1-1 1h-2M7 20H5a1 1 0 0 1-1-1v-2M7 8v8M11 8v8M14.5 8v8M18 8v8"/></svg>
+                </span>
+                <span><b data-i18n="scanTitle">Scan barcode</b><small data-i18n="scanText">Point the camera at a product barcode — nutrition comes from Open Food Facts.</small></span>
+              </button>
+              <button class="tool" id="openPhoto">
+                <span class="tic amber">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-2.5h6L17 8h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.5" r="3.5"/></svg>
+                </span>
+                <span><b data-i18n="photoTitle">Photograph a meal</b><small data-i18n="photoText">Take a photo of your plate — the on-device recognizer suggests what it sees, you confirm the amounts.</small></span>
+              </button>
+            </div>
+            <div class="field" style="margin-bottom:0">
+              <label data-i18n="searchLabel">Search foods</label>
+              <div class="searchrow">
+                <input id="searchInput" type="search" data-i18n-ph="searchPh" placeholder="e.g. chicken, rice, apple…" />
+                <button class="btn" id="searchBtn" data-i18n="searchBtn">Search</button>
+                <button class="iconbtn" id="voiceBtn" aria-label="Voice" style="width:47px;height:47px;border-radius:12px;flex:none">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+                </button>
+              </div>
+              <div class="status" id="searchStatus"></div>
+            </div>
+            <div class="foodgrid" id="foodResults"></div>
+          </div>
+
+          <div class="card">
+            <h2 data-i18n="quickTitle">Quick add</h2>
+            <p class="sub" data-i18n="quickText">Something not in the list? Add it with its calories.</p>
+            <div class="frow">
+              <div class="field"><label data-i18n="qName">Name</label><input id="qName" type="text" /></div>
+              <div class="field"><label data-i18n="qKcal">Calories (kcal)</label><input id="qKcal" type="number" min="0" inputmode="numeric" /></div>
+            </div>
+            <div class="frow">
+              <div class="field"><label data-i18n="protein">Protein</label><input id="qP" type="number" min="0" placeholder="g" /></div>
+              <div class="field"><label data-i18n="carbs">Carbs</label><input id="qC" type="number" min="0" placeholder="g" /></div>
+            </div>
+            <div class="field"><label data-i18n="fat">Fat</label><input id="qF" type="number" min="0" placeholder="g" /></div>
+            <button class="btn" id="quickAdd" data-i18n="quickBtn">Add to diary</button>
+          </div>
+        </section>
+
+        <!-- ============ ACTIVITY ============ -->
+        <section class="view" id="view-activity">
+          <div class="card">
+            <h2 data-i18n="actTitle">Log activity</h2>
+            <p class="sub" data-i18n="actText">Calories burned are estimated with MET values and your current weight, and added to today's budget.</p>
+            <div class="exgrid" id="exGrid"></div>
+          </div>
+        </section>
+
+        <!-- ============ PROGRESS ============ -->
+        <section class="view" id="view-progress">
+          <div class="statgrid">
+            <div class="sc"><span class="n" id="statAvg">–</span><span class="l" data-i18n="statAvg">Avg. kcal / day (30d)</span></div>
+            <div class="sc"><span class="n" id="statDays">0</span><span class="l" data-i18n="statDays">Days logged</span></div>
+            <div class="sc"><span class="n" id="statWeight">–</span><span class="l" data-i18n="statWeight">Latest weight (kg)</span></div>
+          </div>
+          <div class="card">
+            <h2 data-i18n="chart1Title">Calories — last 30 days</h2>
+            <p class="sub" data-i18n="chart1Text">Daily calories eaten. The line is your goal.</p>
+            <div class="chartbox" id="calChart"></div>
+          </div>
+          <div class="card">
+            <h2 data-i18n="chart2Title">Weight</h2>
+            <p class="sub" data-i18n="chart2Text">Log your weight to see the trend.</p>
+            <div class="frow">
+              <div class="field"><label data-i18n="wLabel">Weight today (kg)</label><input id="wInput" type="number" step="0.1" min="20" max="400" inputmode="decimal" /></div>
+              <div class="field"><label>&nbsp;</label><button class="btn" id="wAdd" style="width:100%" data-i18n="wBtn">Save weight</button></div>
+            </div>
+            <div class="chartbox" id="weightChart"></div>
+          </div>
+          <div class="card">
+            <h2 data-i18n="exportTitle">Export your data</h2>
+            <p class="sub" data-i18n="exportText">Download your whole diary — food, activity, water and weight — as a spreadsheet file.</p>
+            <div class="btnrow">
+              <button class="btn" id="expCsv" data-i18n="exportCsv">Download CSV</button>
+              <button class="btn ghost" id="expXls" data-i18n="exportExcel">Download Excel (.xls)</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ GOAL ============ -->
+        <section class="view" id="view-goal">
+          <div class="card">
+            <h2 data-i18n="goalTitle">Your daily goal</h2>
+            <p class="sub" data-i18n="goalText">Calculated with the Mifflin-St Jeor formula — the same method YAZIO publishes in its help center.</p>
+            <div class="field">
+              <label data-i18n="sexLabel">Sex</label>
+              <div class="segwrap" id="sexSeg">
+                <button data-sex="m" data-i18n="male">Male</button>
+                <button data-sex="f" data-i18n="female">Female</button>
+              </div>
+            </div>
+            <div class="frow">
+              <div class="field"><label data-i18n="ageLabel">Age (years)</label><input id="inAge" type="number" min="10" max="100" inputmode="numeric" /></div>
+              <div class="field"><label data-i18n="weightLabel">Weight (kg)</label><input id="inWeight" type="number" step="0.1" min="25" max="400" inputmode="decimal" /></div>
+            </div>
+            <div class="frow">
+              <div class="field"><label data-i18n="heightLabel">Height (cm)</label><input id="inHeight" type="number" min="100" max="250" inputmode="numeric" /></div>
+              <div class="field">
+                <label data-i18n="actLabel">Activity level</label>
+                <select id="inActivity">
+                  <option value="1.25" data-i18n="actLow">Low — mostly sitting (×1.25)</option>
+                  <option value="1.38" data-i18n="actMod">Moderate — on your feet a lot (×1.38)</option>
+                  <option value="1.52" data-i18n="actHigh">High — physical work / training (×1.52)</option>
+                  <option value="1.65" data-i18n="actVery">Very high — athlete level (×1.65)</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label data-i18n="goalLabel">Goal</label>
+              <div class="segwrap" id="goalSeg">
+                <button data-goal="lose" data-i18n="gLose">Lose weight</button>
+                <button data-goal="keep" data-i18n="gKeep">Maintain</button>
+                <button data-goal="gain" data-i18n="gGain">Gain weight</button>
+              </div>
+            </div>
+            <div class="field" id="rateField">
+              <label data-i18n="rateLabel">Weekly change</label>
+              <div class="segwrap" id="rateSeg">
+                <button data-rate="0.25">0.25 kg</button>
+                <button data-rate="0.5">0.5 kg</button>
+                <button data-rate="0.75">0.75 kg</button>
+                <button data-rate="1">1 kg</button>
+              </div>
+            </div>
+            <button class="btn" id="calcBtn" data-i18n="calcBtn">Calculate &amp; save</button>
+            <div class="resultbox hidden" id="goalResult">
+              <div><span class="big" id="resKcal">0</span> <span data-i18n="kcalDay">kcal / day</span></div>
+              <p class="sub" style="margin:8px 0 0" id="resDetail"></p>
+            </div>
+            <p class="note" data-i18n="goalNote">How it works: BMR (Mifflin-St Jeor) × your activity factor, then −375 kcal per 0.5 kg of weekly loss (or + for gain), as published by YAZIO. Targets never drop below 1,200 kcal (women) / 1,500 kcal (men), the floors MyFitnessPal uses. Default macro split: 50% carbs / 20% protein / 30% fat. This is general guidance, not medical advice.</p>
+          </div>
+
+          <div class="card">
+            <h2 data-i18n="macrosTitle">Macros in grams</h2>
+            <p class="sub" data-i18n="macrosText">Set exact gram targets for protein, carbs and fat — they replace the default percentage split.</p>
+            <div class="frow3">
+              <div class="field"><label><span data-i18n="protein">Protein</span> (g)</label><input id="mgP" type="number" min="0" inputmode="numeric" /></div>
+              <div class="field"><label><span data-i18n="carbs">Carbs</span> (g)</label><input id="mgC" type="number" min="0" inputmode="numeric" /></div>
+              <div class="field"><label><span data-i18n="fat">Fat</span> (g)</label><input id="mgF" type="number" min="0" inputmode="numeric" /></div>
+            </div>
+            <p class="sub" id="mgInfo" style="margin:0 0 12px"></p>
+            <div class="btnrow">
+              <button class="btn" id="mgSave" data-i18n="saveBtn">Save</button>
+              <button class="btn ghost" id="mgClear" data-i18n="clearBtn">Reset</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2 data-i18n="dayGoalsTitle">Goal per weekday</h2>
+            <p class="sub" data-i18n="dayGoalsText">A different calorie target for each day of the week — e.g. more on training days, less on rest days.</p>
+            <div id="dayGoalRows"></div>
+            <div class="btnrow">
+              <button class="btn" id="dgSave" data-i18n="saveBtn">Save</button>
+              <button class="btn ghost" id="dgClear" data-i18n="clearBtn">Reset</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2 data-i18n="mealGoalsTitle">Goal per meal</h2>
+            <p class="sub" data-i18n="mealGoalsText">How your daily target splits across meals, in percent. The diary shows each meal's target next to what you ate.</p>
+            <div class="frow">
+              <div class="field"><label><span data-i18n="breakfast">Breakfast</span> %</label><input id="mp-breakfast" type="number" min="0" max="100" inputmode="numeric" /></div>
+              <div class="field"><label><span data-i18n="lunch">Lunch</span> %</label><input id="mp-lunch" type="number" min="0" max="100" inputmode="numeric" /></div>
+            </div>
+            <div class="frow">
+              <div class="field"><label><span data-i18n="dinner">Dinner</span> %</label><input id="mp-dinner" type="number" min="0" max="100" inputmode="numeric" /></div>
+              <div class="field"><label><span data-i18n="snack">Snack</span> %</label><input id="mp-snack" type="number" min="0" max="100" inputmode="numeric" /></div>
+            </div>
+            <p class="sub" id="mpSum" style="margin:0 0 12px"></p>
+            <div class="btnrow">
+              <button class="btn" id="mpSave" data-i18n="saveBtn">Save</button>
+              <button class="btn ghost" id="mpClear" data-i18n="clearBtn">Reset</button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- ============ BARCODE SHEET ============ -->
+    <div class="overlay" id="scanSheet">
+      <div class="sheet">
+        <button class="iconbtn x" data-close="scanSheet" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+        <h3 data-i18n="scanTitle">Scan barcode</h3>
+        <p class="sub" data-i18n="scanHelp">Hold the barcode inside the frame. Nutrition data comes from the free Open Food Facts database.</p>
+        <div id="scanner"></div>
+        <div class="status" id="scanStatus"></div>
+        <div class="field" style="margin-top:14px">
+          <label data-i18n="codeLabel">…or type the barcode number</label>
+          <div class="searchrow">
+            <input id="codeInput" type="text" inputmode="numeric" placeholder="3017620422003" />
+            <button class="btn" id="codeBtn" data-i18n="codeBtn">Look up</button>
+          </div>
+        </div>
+        <div id="scanResult"></div>
+      </div>
+    </div>
+
+    <!-- ============ PHOTO SHEET ============ -->
+    <div class="overlay" id="photoSheet">
+      <div class="sheet">
+        <button class="iconbtn x" data-close="photoSheet" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+        <h3 data-i18n="photoTitle">Photograph a meal</h3>
+        <p class="sub" data-i18n="photoHelp">The recognizer runs on your device (MobileNet) and matches what it sees to foods in the catalog. Photo-based estimates are rough — always check the amounts before adding.</p>
+        <input id="photoInput" type="file" accept="image/*" capture="environment" class="hidden" />
+        <div class="btnrow">
+          <button class="btn accent" id="takePhoto">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-2.5h6L17 8h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.5" r="3.5"/></svg>
+            <span data-i18n="takePhoto">Take / choose photo</span>
+          </button>
+          <button class="btn ghost hidden" id="recognizeBtn" data-i18n="recognizeBtn">Recognize food</button>
+        </div>
+        <img id="photoPreview" class="mealphoto hidden" alt="" />
+        <div id="photoStatus" class="status"></div>
+        <div id="photoResults"></div>
+        <div id="photoManual" class="hidden">
+          <div class="field" style="margin-top:8px">
+            <label data-i18n="manualLabel">Add an item yourself</label>
+            <div class="searchrow">
+              <select id="manualFood" style="flex:1;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:15px;min-width:0"></select>
+              <input id="manualGrams" type="number" value="150" min="1" style="width:84px;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:15px" />
+              <button class="btn" id="manualAdd" data-i18n="addBtn">Add</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ PORTION SHEET ============ -->
+    <div class="overlay" id="portionSheet">
+      <div class="sheet">
+        <button class="iconbtn x" data-close="portionSheet" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+        <h3 id="portionName">Food</h3>
+        <p class="sub" id="portionInfo"></p>
+        <div class="field">
+          <label data-i18n="gramsLabel">Amount (grams)</label>
+          <input id="portionGrams" type="number" min="1" value="100" inputmode="numeric" />
+        </div>
+        <div class="resultbox" style="margin-bottom:14px">
+          <span class="big" id="portionKcal">0</span> <span data-i18n="kcalWord">kcal</span>
+          <p class="sub" style="margin:6px 0 0" id="portionMacros"></p>
+        </div>
+        <button class="btn" id="portionAdd" style="width:100%" data-i18n="addBtn">Add</button>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+    "use strict";
+    /* ================= i18n ================= */
+    var STR = {
+      en: {
+        today: "Today", tabToday: "Today", tabAdd: "Add food", tabActivity: "Activity", tabProgress: "Progress", tabGoal: "My goal",
+        nudgeTitle: "Set your daily goal first", nudgeText: "Enter your age, weight, height, activity and goal — SaveYourLife calculates your personal daily calorie target.", nudgeBtn: "Calculate my goal",
+        remaining: "kcal remaining", stGoal: "Daily goal", stEaten: "Eaten", stBurned: "Burned (activity)",
+        carbs: "Carbs", protein: "Protein", fat: "Fat",
+        diaryTitle: "Food diary", diaryText: "Everything you eat today, by meal.",
+        breakfast: "Breakfast", lunch: "Lunch", dinner: "Dinner", snack: "Snack",
+        waterTitle: "Water", waterGoal: "goal", exTitle: "Activity today", exText: "Burned calories are added back to your daily budget.",
+        addTitle: "Add food", addText: "Choose the meal, then search, scan a barcode, or photograph your plate.", mealLabel: "Meal",
+        scanTitle: "Scan barcode", scanText: "Point the camera at a product barcode — nutrition comes from Open Food Facts.",
+        photoTitle: "Photograph a meal", photoText: "Take a photo of your plate — the on-device recognizer suggests what it sees, you confirm the amounts.",
+        searchLabel: "Search foods", searchPh: "e.g. chicken, rice, apple…", searchBtn: "Search",
+        quickTitle: "Quick add", quickText: "Something not in the list? Add it with its calories.", qName: "Name", qKcal: "Calories (kcal)", quickBtn: "Add to diary",
+        actTitle: "Log activity", actText: "Calories burned are estimated with MET values and your current weight, and added to today's budget.",
+        statAvg: "Avg. kcal / day (30d)", statDays: "Days logged", statWeight: "Latest weight (kg)",
+        chart1Title: "Calories — last 30 days", chart1Text: "Daily calories eaten. The line is your goal.",
+        chart2Title: "Weight", chart2Text: "Log your weight to see the trend.", wLabel: "Weight today (kg)", wBtn: "Save weight",
+        goalTitle: "Your daily goal", goalText: "Calculated with the Mifflin-St Jeor formula — the same method YAZIO publishes in its help center.",
+        sexLabel: "Sex", male: "Male", female: "Female", ageLabel: "Age (years)", weightLabel: "Weight (kg)", heightLabel: "Height (cm)",
+        actLabel: "Activity level", actLow: "Low — mostly sitting (×1.25)", actMod: "Moderate — on your feet a lot (×1.38)", actHigh: "High — physical work / training (×1.52)", actVery: "Very high — athlete level (×1.65)",
+        goalLabel: "Goal", gLose: "Lose weight", gKeep: "Maintain", gGain: "Gain weight", rateLabel: "Weekly change", calcBtn: "Calculate & save", kcalDay: "kcal / day",
+        goalNote: "How it works: BMR (Mifflin-St Jeor) × your activity factor, then −375 kcal per 0.5 kg of weekly loss (or + for gain), as published by YAZIO. Targets never drop below 1,200 kcal (women) / 1,500 kcal (men), the floors MyFitnessPal uses. Default macro split: 50% carbs / 20% protein / 30% fat. This is general guidance, not medical advice.",
+        scanHelp: "Hold the barcode inside the frame. Nutrition data comes from the free Open Food Facts database.",
+        codeLabel: "…or type the barcode number", codeBtn: "Look up",
+        photoHelp: "The recognizer runs on your device (MobileNet) and matches what it sees to foods in the catalog. Photo-based estimates are rough — always check the amounts before adding.",
+        takePhoto: "Take / choose photo", recognizeBtn: "Recognize food", manualLabel: "Add an item yourself", addBtn: "Add",
+        gramsLabel: "Amount (grams)", kcalWord: "kcal", per100: "per 100 g", minutes: "min",
+        emptyMeal: "Nothing logged yet.", noEx: "No activity logged today.", add: "Add",
+        searching: "Searching USDA FoodData Central…", searchLocal: "Showing the built-in catalog.", searchFail: "Online search unavailable — showing the built-in catalog.",
+        noResults: "No matches. Try another word, or use Quick add.",
+        added: "Added to your diary", goalSaved: "Goal saved", weightSaved: "Weight saved", needProfile: "Set your goal first (My goal tab) so activity burn can use your weight.",
+        scanStart: "Starting camera…", scanFail: "Camera unavailable here — type the barcode number below instead.",
+        looking: "Looking up the product…", notFound: "Product not found in Open Food Facts. Try Quick add instead.",
+        foundNoNutri: "Product found, but it has no nutrition data in Open Food Facts.",
+        recognLoading: "Loading the on-device recognizer (one-time download)…", recognRun: "Recognizing…",
+        recognFail: "The recognizer could not load (connection needed the first time). You can still add items yourself below.",
+        recognNone: "No catalog food recognized in this photo. Add the items yourself below.",
+        recognSome: "Possible matches — check the amount, then add:",
+        conf: "confidence", resDetail: "BMR {bmr} kcal × activity {act} {adj} = your target. Macros: {c} g carbs · {p} g protein · {f} g fat.",
+        adjMinus: "− {n} kcal (goal)", adjPlus: "+ {n} kcal (goal)", adjZero: "± 0",
+        floorNote: " Raised to the safe minimum of {n} kcal.", over: "over goal", sourceUsda: "USDA", sourceCat: "Catalog", sourceOff: "Open Food Facts",
+        macrosTitle: "Macros in grams", macrosText: "Set exact gram targets for protein, carbs and fat — they replace the default percentage split.",
+        saveBtn: "Save", clearBtn: "Reset", savedOk: "Saved",
+        dayGoalsTitle: "Goal per weekday", dayGoalsText: "A different calorie target for each day of the week — e.g. more on training days, less on rest days.",
+        mealGoalsTitle: "Goal per meal", mealGoalsText: "How your daily target splits across meals, in percent. The diary shows each meal's target next to what you ate.",
+        pctSum: "Total: {n}%",
+        exportTitle: "Export your data", exportText: "Download your whole diary — food, activity, water and weight — as a spreadsheet file.",
+        exportCsv: "Download CSV", exportExcel: "Download Excel (.xls)", exported: "Export downloaded",
+        fastTitle: "Intermittent fasting", fastText: "Pick a fasting window and start the timer. It keeps counting while you use the app, even across days.",
+        fastStart: "Start fast", fastStop: "End fast", fastEnds: "Ends at", fastElapsed: "elapsed", fastDone: "Fast complete — well done!",
+        voiceListening: "Listening… say a food, e.g. “200 grams chicken”", voiceNo: "Voice input is not supported in this browser.",
+        today_: "Today", yesterday: "Yesterday", tomorrow: "Tomorrow", delete: "Delete"
+      },
+      de: {
+        today: "Heute", tabToday: "Heute", tabAdd: "Essen", tabActivity: "Aktivität", tabProgress: "Verlauf", tabGoal: "Mein Ziel",
+        nudgeTitle: "Zuerst dein Tagesziel festlegen", nudgeText: "Alter, Gewicht, Größe, Aktivität und Ziel eingeben — SaveYourLife berechnet dein persönliches Kalorienziel.", nudgeBtn: "Mein Ziel berechnen",
+        remaining: "kcal übrig", stGoal: "Tagesziel", stEaten: "Gegessen", stBurned: "Verbrannt (Aktivität)",
+        carbs: "Kohlenhydrate", protein: "Eiweiß", fat: "Fett",
+        diaryTitle: "Ernährungstagebuch", diaryText: "Alles, was du heute isst — nach Mahlzeit.",
+        breakfast: "Frühstück", lunch: "Mittagessen", dinner: "Abendessen", snack: "Snack",
+        waterTitle: "Wasser", waterGoal: "Ziel", exTitle: "Aktivität heute", exText: "Verbrannte Kalorien werden deinem Tagesbudget wieder gutgeschrieben.",
+        addTitle: "Essen hinzufügen", addText: "Mahlzeit wählen, dann suchen, Barcode scannen oder dein Gericht fotografieren.", mealLabel: "Mahlzeit",
+        scanTitle: "Barcode scannen", scanText: "Kamera auf den Produkt-Barcode richten — Nährwerte kommen von Open Food Facts.",
+        photoTitle: "Mahlzeit fotografieren", photoText: "Foto von deinem Teller machen — die Erkennung auf dem Gerät schlägt vor, was sie sieht, du bestätigst die Mengen.",
+        searchLabel: "Lebensmittel suchen", searchPh: "z. B. Hähnchen, Reis, Apfel…", searchBtn: "Suchen",
+        quickTitle: "Schnell eintragen", quickText: "Etwas nicht in der Liste? Mit seinen Kalorien eintragen.", qName: "Name", qKcal: "Kalorien (kcal)", quickBtn: "Ins Tagebuch",
+        actTitle: "Aktivität eintragen", actText: "Verbrannte Kalorien werden mit MET-Werten und deinem aktuellen Gewicht geschätzt und dem heutigen Budget gutgeschrieben.",
+        statAvg: "Ø kcal / Tag (30 T.)", statDays: "Tage eingetragen", statWeight: "Letztes Gewicht (kg)",
+        chart1Title: "Kalorien — letzte 30 Tage", chart1Text: "Gegessene Kalorien pro Tag. Die Linie ist dein Ziel.",
+        chart2Title: "Gewicht", chart2Text: "Trage dein Gewicht ein, um den Verlauf zu sehen.", wLabel: "Gewicht heute (kg)", wBtn: "Gewicht speichern",
+        goalTitle: "Dein Tagesziel", goalText: "Berechnet mit der Mifflin-St-Jeor-Formel — dieselbe Methode, die YAZIO in seinem Hilfebereich veröffentlicht.",
+        sexLabel: "Geschlecht", male: "Männlich", female: "Weiblich", ageLabel: "Alter (Jahre)", weightLabel: "Gewicht (kg)", heightLabel: "Größe (cm)",
+        actLabel: "Aktivitätslevel", actLow: "Niedrig — meist sitzend (×1,25)", actMod: "Mittel — viel auf den Beinen (×1,38)", actHigh: "Hoch — körperliche Arbeit / Training (×1,52)", actVery: "Sehr hoch — Sportlerniveau (×1,65)",
+        goalLabel: "Ziel", gLose: "Abnehmen", gKeep: "Gewicht halten", gGain: "Zunehmen", rateLabel: "Veränderung pro Woche", calcBtn: "Berechnen & speichern", kcalDay: "kcal / Tag",
+        goalNote: "So funktioniert es: Grundumsatz (Mifflin-St Jeor) × Aktivitätsfaktor, dann −375 kcal je 0,5 kg Wochenverlust (oder + beim Zunehmen), wie von YAZIO veröffentlicht. Ziele fallen nie unter 1.200 kcal (Frauen) / 1.500 kcal (Männer) — die Mindestwerte von MyFitnessPal. Standard-Makros: 50 % Kohlenhydrate / 20 % Eiweiß / 30 % Fett. Allgemeine Orientierung, keine medizinische Beratung.",
+        scanHelp: "Halte den Barcode in den Rahmen. Die Nährwerte kommen aus der freien Datenbank Open Food Facts.",
+        codeLabel: "…oder die Barcode-Nummer eintippen", codeBtn: "Suchen",
+        photoHelp: "Die Erkennung läuft auf deinem Gerät (MobileNet) und gleicht das Gesehene mit dem Katalog ab. Foto-Schätzungen sind grob — prüfe die Mengen vor dem Hinzufügen.",
+        takePhoto: "Foto aufnehmen / wählen", recognizeBtn: "Essen erkennen", manualLabel: "Selbst ein Lebensmittel hinzufügen", addBtn: "Hinzufügen",
+        gramsLabel: "Menge (Gramm)", kcalWord: "kcal", per100: "pro 100 g", minutes: "Min.",
+        emptyMeal: "Noch nichts eingetragen.", noEx: "Heute noch keine Aktivität eingetragen.", add: "Hinzufügen",
+        searching: "Suche in USDA FoodData Central…", searchLocal: "Eingebauter Katalog wird angezeigt.", searchFail: "Online-Suche nicht verfügbar — eingebauter Katalog wird angezeigt.",
+        noResults: "Keine Treffer. Anderes Wort versuchen oder „Schnell eintragen“ nutzen.",
+        added: "Ins Tagebuch eingetragen", goalSaved: "Ziel gespeichert", weightSaved: "Gewicht gespeichert", needProfile: "Lege zuerst dein Ziel fest (Tab „Mein Ziel“), damit der Verbrauch mit deinem Gewicht berechnet wird.",
+        scanStart: "Kamera startet…", scanFail: "Kamera hier nicht verfügbar — tippe die Barcode-Nummer unten ein.",
+        looking: "Produkt wird gesucht…", notFound: "Produkt in Open Food Facts nicht gefunden. Nutze stattdessen „Schnell eintragen“.",
+        foundNoNutri: "Produkt gefunden, aber ohne Nährwerte in Open Food Facts.",
+        recognLoading: "Erkennung wird geladen (einmaliger Download)…", recognRun: "Erkenne…",
+        recognFail: "Die Erkennung konnte nicht geladen werden (beim ersten Mal Verbindung nötig). Du kannst unten selbst Lebensmittel hinzufügen.",
+        recognNone: "Kein Katalog-Lebensmittel auf diesem Foto erkannt. Füge die Zutaten unten selbst hinzu.",
+        recognSome: "Mögliche Treffer — Menge prüfen und hinzufügen:",
+        conf: "Sicherheit", resDetail: "Grundumsatz {bmr} kcal × Aktivität {act} {adj} = dein Ziel. Makros: {c} g Kohlenhydrate · {p} g Eiweiß · {f} g Fett.",
+        adjMinus: "− {n} kcal (Ziel)", adjPlus: "+ {n} kcal (Ziel)", adjZero: "± 0",
+        floorNote: " Auf das sichere Minimum von {n} kcal angehoben.", over: "über dem Ziel", sourceUsda: "USDA", sourceCat: "Katalog", sourceOff: "Open Food Facts",
+        macrosTitle: "Makros in Gramm", macrosText: "Genaue Gramm-Ziele für Eiweiß, Kohlenhydrate und Fett festlegen — sie ersetzen die Standard-Prozentverteilung.",
+        saveBtn: "Speichern", clearBtn: "Zurücksetzen", savedOk: "Gespeichert",
+        dayGoalsTitle: "Ziel pro Wochentag", dayGoalsText: "Ein anderes Kalorienziel für jeden Wochentag — z. B. mehr an Trainingstagen, weniger an Ruhetagen.",
+        mealGoalsTitle: "Ziel pro Mahlzeit", mealGoalsText: "So teilt sich dein Tagesziel auf die Mahlzeiten auf, in Prozent. Das Tagebuch zeigt das Ziel jeder Mahlzeit neben dem Gegessenen.",
+        pctSum: "Gesamt: {n} %",
+        exportTitle: "Daten exportieren", exportText: "Lade dein ganzes Tagebuch herunter — Essen, Aktivität, Wasser und Gewicht — als Tabellen-Datei.",
+        exportCsv: "CSV herunterladen", exportExcel: "Excel (.xls) herunterladen", exported: "Export heruntergeladen",
+        fastTitle: "Intervallfasten", fastText: "Fastenfenster wählen und den Timer starten. Er zählt weiter, solange du die App nutzt — auch über Tage.",
+        fastStart: "Fasten starten", fastStop: "Fasten beenden", fastEnds: "Endet um", fastElapsed: "vergangen", fastDone: "Fasten geschafft — gut gemacht!",
+        voiceListening: "Ich höre zu… nenne ein Lebensmittel, z. B. „200 Gramm Hähnchen“", voiceNo: "Spracheingabe wird in diesem Browser nicht unterstützt.",
+        today_: "Heute", yesterday: "Gestern", tomorrow: "Morgen", delete: "Löschen"
+      },
+      ar: {
+        today: "اليوم", tabToday: "اليوم", tabAdd: "إضافة أكل", tabActivity: "النشاط", tabProgress: "التقدم", tabGoal: "هدفي",
+        nudgeTitle: "حدّد هدفك اليومي أولاً", nudgeText: "دخّل عمرك ووزنك وطولك ونشاطك وهدفك — وSaveYourLife غادي يحسب ليك هدف السعرات اليومي ديالك.", nudgeBtn: "احسب هدفي",
+        remaining: "سعرة متبقية", stGoal: "الهدف اليومي", stEaten: "أكلت", stBurned: "حرقت (نشاط)",
+        carbs: "الكربوهيدرات", protein: "البروتين", fat: "الدهون",
+        diaryTitle: "دفتر الأكل", diaryText: "كلشي كليتي اليوم، حسب الوجبات.",
+        breakfast: "الفطور", lunch: "الغداء", dinner: "العشاء", snack: "وجبة خفيفة",
+        waterTitle: "الماء", waterGoal: "الهدف", exTitle: "نشاط اليوم", exText: "السعرات المحروقة كتزاد لميزانية النهار ديالك.",
+        addTitle: "إضافة أكل", addText: "اختار الوجبة، من بعد قلب، ولا سكاني الباركود، ولا صوّر الطبق ديالك.", mealLabel: "الوجبة",
+        scanTitle: "سكان الباركود", scanText: "وجّه الكاميرا لباركود المنتج — القيم الغذائية من Open Food Facts.",
+        photoTitle: "تصوير وجبة", photoText: "صوّر الطبق ديالك — أداة التعرف في الجهاز كتقترح شنو شافت، ونتا كتأكد الكميات.",
+        searchLabel: "قلب على الأطعمة", searchPh: "مثال: دجاج، روز، تفاح…", searchBtn: "قلب",
+        quickTitle: "إضافة سريعة", quickText: "شي حاجة ماشي في اللائحة؟ زيدها بالسعرات ديالها.", qName: "الاسم", qKcal: "السعرات (kcal)", quickBtn: "زيد للدفتر",
+        actTitle: "تسجيل نشاط", actText: "السعرات المحروقة كتتحسب بقيم MET والوزن ديالك الحالي، وكتزاد لميزانية اليوم.",
+        statAvg: "معدل السعرات / يوم (30 يوم)", statDays: "أيام مسجلة", statWeight: "آخر وزن (كغ)",
+        chart1Title: "السعرات — آخر 30 يوم", chart1Text: "السعرات اللي كليتي كل يوم. الخط هو الهدف ديالك.",
+        chart2Title: "الوزن", chart2Text: "سجل وزنك باش تشوف التطور.", wLabel: "وزن اليوم (كغ)", wBtn: "حفظ الوزن",
+        goalTitle: "هدفك اليومي", goalText: "محسوب بصيغة Mifflin-St Jeor — نفس الطريقة اللي كتنشرها YAZIO في مركز المساعدة ديالها.",
+        sexLabel: "الجنس", male: "ذكر", female: "أنثى", ageLabel: "العمر (سنوات)", weightLabel: "الوزن (كغ)", heightLabel: "الطول (سم)",
+        actLabel: "مستوى النشاط", actLow: "قليل — جالس بزاف (×1.25)", actMod: "متوسط — واقف بزاف (×1.38)", actHigh: "عالي — خدمة بدنية / تدريب (×1.52)", actVery: "عالي بزاف — مستوى رياضي (×1.65)",
+        goalLabel: "الهدف", gLose: "نقصان الوزن", gKeep: "الحفاظ على الوزن", gGain: "زيادة الوزن", rateLabel: "التغير الأسبوعي", calcBtn: "احسب واحفظ", kcalDay: "سعرة / يوم",
+        goalNote: "كيفاش كتخدم: معدل الأيض الأساسي (Mifflin-St Jeor) × معامل النشاط، من بعد −375 سعرة لكل 0.5 كغ نقصان في الأسبوع (أو + للزيادة)، كيفما منشور عند YAZIO. الأهداف ما كتنزلش تحت 1,200 سعرة (نساء) / 1,500 سعرة (رجال)، وهي الحدود الدنيا عند MyFitnessPal. توزيع الماكرو الافتراضي: 50% كربوهيدرات / 20% بروتين / 30% دهون. هادي إرشادات عامة، ماشي نصيحة طبية.",
+        scanHelp: "حط الباركود وسط الإطار. القيم الغذائية من قاعدة Open Food Facts المجانية.",
+        codeLabel: "…أو كتب رقم الباركود", codeBtn: "قلب",
+        photoHelp: "أداة التعرف كتخدم في جهازك (MobileNet) وكتقارن اللي شافت مع لائحة الأطعمة. تقديرات الصور تقريبية — تأكد من الكميات قبل ما تزيدها.",
+        takePhoto: "صوّر / اختار صورة", recognizeBtn: "تعرف على الأكل", manualLabel: "زيد عنصر بنفسك", addBtn: "زيد",
+        gramsLabel: "الكمية (غرام)", kcalWord: "سعرة", per100: "لكل 100 غ", minutes: "دقيقة",
+        emptyMeal: "مازال ما سجلتي والو.", noEx: "ما كاين حتى نشاط مسجل اليوم.", add: "زيد",
+        searching: "كنقلب في USDA FoodData Central…", searchLocal: "كنعرض اللائحة الداخلية.", searchFail: "البحث عبر الإنترنت ما متاحش — كنعرض اللائحة الداخلية.",
+        noResults: "ما كاين حتى نتيجة. جرّب كلمة أخرى، ولا استعمل الإضافة السريعة.",
+        added: "تزاد للدفتر", goalSaved: "تحفظ الهدف", weightSaved: "تحفظ الوزن", needProfile: "حدّد هدفك أولاً (تبويب هدفي) باش يتحسب الحرق بالوزن ديالك.",
+        scanStart: "الكاميرا كتبدا…", scanFail: "الكاميرا ما متاحاش هنا — كتب رقم الباركود لتحت.",
+        looking: "كنقلب على المنتج…", notFound: "المنتج ما تلقاش في Open Food Facts. جرّب الإضافة السريعة.",
+        foundNoNutri: "المنتج تلقى، ولكن ما عندوش قيم غذائية في Open Food Facts.",
+        recognLoading: "كنحمّل أداة التعرف (تحميل مرة وحدة)…", recognRun: "كنتعرف…",
+        recognFail: "أداة التعرف ما تحملاتش (خاص الاتصال أول مرة). تقدر تزيد العناصر بنفسك لتحت.",
+        recognNone: "ما تعرف على حتى طعام من اللائحة في هاد الصورة. زيد العناصر بنفسك لتحت.",
+        recognSome: "نتائج محتملة — تأكد من الكمية وزيدها:",
+        conf: "الثقة", resDetail: "الأيض الأساسي {bmr} سعرة × النشاط {act} {adj} = الهدف ديالك. الماكرو: {c} غ كربوهيدرات · {p} غ بروتين · {f} غ دهون.",
+        adjMinus: "− {n} سعرة (الهدف)", adjPlus: "+ {n} سعرة (الهدف)", adjZero: "± 0",
+        floorNote: " ترفع للحد الأدنى الآمن {n} سعرة.", over: "فوق الهدف", sourceUsda: "USDA", sourceCat: "اللائحة", sourceOff: "Open Food Facts",
+        macrosTitle: "الماكروز بالغرام", macrosText: "حدّد أهداف دقيقة بالغرام للبروتين والكربوهيدرات والدهون — كيبدّلو التوزيع الافتراضي بالنسبة.",
+        saveBtn: "حفظ", clearBtn: "إعادة تعيين", savedOk: "تحفظ",
+        dayGoalsTitle: "الهدف حسب نهار الأسبوع", dayGoalsText: "هدف سعرات مختلف لكل نهار في الأسبوع — مثال: كتر في أيام التدريب، أقل في أيام الراحة.",
+        mealGoalsTitle: "هدف السعرات لكل وجبة", mealGoalsText: "كيفاش كيتقسم هدف النهار على الوجبات، بالنسبة المئوية. الدفتر كيبين هدف كل وجبة حدا اللي كليتي.",
+        pctSum: "المجموع: {n}%",
+        exportTitle: "تصدير المعطيات", exportText: "نزّل الدفتر ديالك كامل — الأكل والنشاط والماء والوزن — في ملف جدول.",
+        exportCsv: "نزّل CSV", exportExcel: "نزّل Excel (.xls)", exported: "تنزّل التصدير",
+        fastTitle: "الصيام المتقطع", fastText: "اختار مدة الصيام وبدا المؤقت. كيبقى يحسب ونتا كتستعمل الموقع، حتى عبر الأيام.",
+        fastStart: "بدا الصيام", fastStop: "سالي الصيام", fastEnds: "كيسالي في", fastElapsed: "داز", fastDone: "كملتي الصيام — برافو عليك!",
+        voiceListening: "كنسمع… قول شي ماكلة، مثال: «200 غرام دجاج»", voiceNo: "الإدخال بالصوت ما مدعومش في هاد المتصفح.",
+        today_: "اليوم", yesterday: "البارح", tomorrow: "غداً", delete: "حذف"
+      }
+    };
+
+    /* ================= catalog (per 100 g, USDA-typical values) ================= */
+    /* [key, kcal, protein, carbs, fat, defaultGrams, [en, de, ar names], [imagenet classes]] */
+    var CATALOG = [
+      ["chicken", 165, 31, 0, 3.6, 150, ["Grilled chicken breast", "Gegrillte Hähnchenbrust", "صدر دجاج مشوي"], []],
+      ["rice", 130, 2.7, 28, 0.3, 180, ["Cooked white rice", "Gekochter weißer Reis", "روز أبيض مطبوخ"], []],
+      ["couscous", 112, 3.8, 23, 0.2, 200, ["Couscous, cooked", "Couscous, gekocht", "كسكس مطبوخ"], []],
+      ["egg", 155, 13, 1.1, 11, 60, ["Egg, boiled", "Ei, gekocht", "بيض مسلوق"], []],
+      ["oats", 389, 17, 66, 7, 50, ["Oatmeal / oats", "Haferflocken", "شوفان"], []],
+      ["bread", 247, 13, 41, 3.4, 60, ["Whole-wheat bread", "Vollkornbrot", "خبز كامل"], ["bagel", "pretzel", "French loaf", "dough"]],
+      ["yogurt", 97, 9, 3.6, 5, 170, ["Greek yogurt", "Griechischer Joghurt", "ياغورت يوناني"], []],
+      ["apple", 52, 0.3, 14, 0.2, 180, ["Apple", "Apfel", "تفاح"], ["Granny Smith", "apple"]],
+      ["banana", 89, 1.1, 23, 0.3, 120, ["Banana", "Banane", "بنان"], ["banana"]],
+      ["orange", 47, 0.9, 12, 0.1, 160, ["Orange", "Orange", "برتقال"], ["orange"]],
+      ["dates", 282, 2.5, 75, 0.4, 40, ["Dates", "Datteln", "تمر"], []],
+      ["salmon", 208, 20, 0, 13, 150, ["Salmon", "Lachs", "سلمون"], []],
+      ["tuna", 132, 28, 0, 1, 120, ["Tuna, canned in water", "Thunfisch (Dose, Wasser)", "طون معلب في الماء"], []],
+      ["beef", 250, 26, 0, 15, 150, ["Beef, ground, cooked", "Rinderhack, gebraten", "لحم بقري مفروم مطبوخ"], ["meat loaf"]],
+      ["pasta", 131, 5, 25, 1.1, 200, ["Pasta, cooked", "Nudeln, gekocht", "معكرونة مطبوخة"], ["carbonara"]],
+      ["pizza", 266, 11, 33, 10, 150, ["Pizza", "Pizza", "بيتزا"], ["pizza", "pizza sauce"]],
+      ["burger", 295, 15, 24, 15, 200, ["Cheeseburger", "Cheeseburger", "تشيزبرغر"], ["cheeseburger", "hamburger"]],
+      ["hotdog", 290, 10, 23, 18, 100, ["Hot dog", "Hot Dog", "هوت دوغ"], ["hotdog", "hot dog", "red hot"]],
+      ["fries", 312, 3.4, 41, 15, 120, ["French fries", "Pommes frites", "بطاطس مقلية"], []],
+      ["potato", 77, 2, 17, 0.1, 200, ["Potato, boiled", "Kartoffel, gekocht", "بطاطس مسلوقة"], ["mashed potato"]],
+      ["salad", 17, 1.2, 3.3, 0.2, 150, ["Green salad", "Grüner Salat", "سلطة خضراء"], []],
+      ["tomato", 18, 0.9, 3.9, 0.2, 120, ["Tomato", "Tomate", "طماطم"], []],
+      ["cucumber", 15, 0.7, 3.6, 0.1, 120, ["Cucumber", "Gurke", "خيار"], ["cucumber", "cuke"]],
+      ["broccoli", 34, 2.8, 6.6, 0.4, 150, ["Broccoli", "Brokkoli", "بروكولي"], ["broccoli"]],
+      ["cauliflower", 25, 1.9, 5, 0.3, 150, ["Cauliflower", "Blumenkohl", "قرنبيط"], ["cauliflower"]],
+      ["pepper", 31, 1, 6, 0.3, 120, ["Bell pepper", "Paprika", "فلفل حلو"], ["bell pepper"]],
+      ["mushroom", 22, 3.1, 3.3, 0.3, 120, ["Mushrooms", "Champignons", "فطر"], ["mushroom", "agaric"]],
+      ["zucchini", 17, 1.2, 3.1, 0.3, 150, ["Zucchini", "Zucchini", "كوسة"], ["zucchini", "courgette"]],
+      ["avocado", 160, 2, 9, 15, 100, ["Avocado", "Avocado", "أفوكادو"], ["avocado", "guacamole"]],
+      ["lentils", 116, 9, 20, 0.4, 200, ["Lentils, cooked", "Linsen, gekocht", "عدس مطبوخ"], ["lentil"]],
+      ["harira", 55, 3.2, 8, 1.2, 300, ["Harira soup", "Harira-Suppe", "حريرة"], ["consomme", "soup bowl"]],
+      ["hummus", 166, 7.9, 14, 9.6, 80, ["Hummus", "Hummus", "حمص"], []],
+      ["falafel", 333, 13, 32, 18, 100, ["Falafel", "Falafel", "فلافل"], []],
+      ["burrito", 220, 9, 30, 7, 250, ["Burrito", "Burrito", "بوريتو"], ["burrito"]],
+      ["potpie", 230, 8, 22, 12, 250, ["Meat pot pie", "Fleischpastete", "فطيرة لحم"], ["potpie"]],
+      ["msemen", 290, 6, 45, 9, 80, ["Msemen (Moroccan flatbread)", "Msemen (marokk. Fladenbrot)", "مسمن"], []],
+      ["milk", 42, 3.4, 5, 1, 250, ["Milk, low-fat", "Milch, fettarm", "حليب قليل الدسم"], []],
+      ["cheese", 402, 25, 1.3, 33, 40, ["Cheese (cheddar)", "Käse (Cheddar)", "جبن (شيدر)"], []],
+      ["almonds", 579, 21, 22, 50, 30, ["Almonds", "Mandeln", "لوز"], []],
+      ["oliveoil", 884, 0, 0, 100, 14, ["Olive oil (1 tbsp)", "Olivenöl (1 EL)", "زيت الزيتون (ملعقة)"], []],
+      ["honey", 304, 0.3, 82, 0, 21, ["Honey (1 tbsp)", "Honig (1 EL)", "عسل (ملعقة)"], ["honeycomb"]],
+      ["strawberry", 32, 0.7, 7.7, 0.3, 150, ["Strawberries", "Erdbeeren", "فراولة"], ["strawberry"]],
+      ["pineapple", 50, 0.5, 13, 0.1, 150, ["Pineapple", "Ananas", "أناناس"], ["pineapple", "ananas"]],
+      ["fig", 74, 0.8, 19, 0.3, 100, ["Figs", "Feigen", "تين"], ["fig"]],
+      ["icecream", 207, 3.5, 24, 11, 100, ["Ice cream", "Eiscreme", "مثلجات"], ["ice cream", "icecream", "ice lolly"]],
+      ["espresso", 9, 0.1, 1.7, 0.2, 60, ["Espresso / black coffee", "Espresso / schwarzer Kaffee", "إسبريسو / قهوة سوداء"], ["espresso", "coffee"]],
+      ["ojuice", 45, 0.7, 10, 0.2, 250, ["Orange juice", "Orangensaft", "عصير برتقال"], []],
+      ["tajine", 95, 8, 6, 4.5, 300, ["Chicken & vegetable tagine", "Hähnchen-Gemüse-Tajine", "طاجين الدجاج والخضار"], []],
+      ["kefta", 230, 18, 2, 17, 150, ["Kefta (grilled spiced meatballs)", "Kefta (gewürzte Hackbällchen)", "كفتة مشوية"], []],
+      ["rfissa", 180, 11, 20, 6, 300, ["Rfissa (chicken, lentils, msemen)", "Rfissa (Hähnchen, Linsen, Msemen)", "رفيسة"], []],
+      ["bastilla", 320, 14, 30, 16, 150, ["Bastilla / pastilla (chicken pie)", "Bastilla (Hähnchenpastete)", "بسطيلة"], []],
+      ["tanjia", 210, 24, 1, 12, 250, ["Tanjia (slow-cooked beef)", "Tanjia (langsam geschmortes Rind)", "طنجية"], []],
+      ["bissara", 90, 5, 12, 2.5, 300, ["Bissara (fava bean soup)", "Bissara (Dicke-Bohnen-Suppe)", "بيصارة"], []],
+      ["zaalouk", 60, 1.5, 6, 3.5, 150, ["Zaalouk (eggplant salad)", "Zaalouk (Auberginensalat)", "زعلوك"], []],
+      ["taktouka", 55, 1.2, 6, 3, 150, ["Taktouka (tomato & pepper salad)", "Taktouka (Tomaten-Paprika-Salat)", "تكتوكة"], []],
+      ["baghrir", 220, 5, 42, 3, 100, ["Baghrir (semolina pancakes)", "Baghrir (Grießpfannkuchen)", "بغرير"], []],
+      ["harcha", 320, 5, 48, 12, 80, ["Harcha (semolina galettes)", "Harcha (Grießtaler)", "حرشة"], []],
+      ["sellou", 450, 10, 45, 26, 40, ["Sellou (roasted flour & almond mix)", "Sellou (geröstetes Mehl mit Mandeln)", "سلو"], []],
+      ["chebakia", 480, 6, 58, 25, 40, ["Chebakia (sesame honey cookies)", "Chebakia (Sesam-Honig-Kekse)", "شباكية"], []],
+      ["kaabghazal", 420, 7, 55, 19, 40, ["Kaab el ghazal (gazelle horns)", "Kaab el Ghazal (Gazellenhörner)", "كعب غزال"], []],
+      ["briouates", 350, 12, 32, 19, 80, ["Briouates (stuffed fried pastries)", "Briouates (gefüllte Teigtaschen)", "بريوات"], []],
+      ["khobz", 260, 8, 50, 3, 60, ["Khobz (Moroccan round bread)", "Khobz (marokk. Rundbrot)", "خبز مغربي"], []],
+      ["minttea", 30, 0, 7.5, 0, 200, ["Moroccan mint tea (sweetened)", "Marokk. Minztee (gesüßt)", "أتاي بالنعناع"], []],
+      ["avocadojuice", 110, 2.5, 11, 6.5, 250, ["Avocado juice (milk & almond)", "Avocadosaft (Milch & Mandel)", "عصير الأفوكادو"], []],
+      ["raib", 95, 3.2, 13, 3.4, 150, ["Raïb (Moroccan set yogurt)", "Raïb (marokk. Joghurt)", "رائب"], []],
+      ["amlou", 550, 12, 25, 46, 30, ["Amlou (almond & argan spread)", "Amlou (Mandel-Argan-Aufstrich)", "أملو"], []],
+      ["merguez", 280, 13, 2, 24, 100, ["Merguez sausages", "Merguez-Würstchen", "ميرغيز (نقانق حارة)"], []],
+      ["brochettes", 200, 22, 1, 12, 150, ["Brochettes (mixed grill skewers)", "Brochettes (Grillspieße)", "قطبان مشوية"], []],
+      ["mechoui", 280, 25, 0, 19, 150, ["Mechoui (roast lamb)", "Mechoui (Lammbraten)", "مشوي (لحم ضأن)"], []],
+      ["seffa", 180, 5, 32, 3.5, 250, ["Seffa (sweet cinnamon couscous)", "Seffa (süßer Zimt-Couscous)", "سفة"], []],
+      ["sardines", 180, 22, 0, 10, 150, ["Grilled sardines", "Gegrillte Sardinen", "سردين مشوي"], []],
+      ["olives", 145, 1, 4, 15, 30, ["Green olives", "Grüne Oliven", "زيتون أخضر"], []],
+      ["snailsoup", 70, 8, 4, 2.5, 300, ["Babouche (Moroccan snail soup)", "Babouche (marokk. Schneckensuppe)", "ببوش (حساء الحلزون)"], []],
+      ["shawarmaC", 180, 16, 6, 10, 200, ["Chicken shawarma", "Hähnchen-Shawarma", "شاورما دجاج"], []],
+      ["shawarmaB", 220, 15, 6, 15, 200, ["Beef shawarma", "Rind-Shawarma", "شاورما لحم"], []],
+      ["kebab", 240, 18, 3, 17, 150, ["Grilled kebab", "Gegrillter Kebab", "كباب مشوي"], []],
+      ["tabbouleh", 120, 2.5, 12, 7, 150, ["Tabbouleh", "Taboulé", "تبولة"], []],
+      ["fattoush", 110, 2, 13, 6, 150, ["Fattoush", "Fattoush", "فتوش"], []],
+      ["mujaddara", 130, 5.5, 20, 3.5, 200, ["Mujaddara (lentils & rice)", "Mujaddara (Linsen & Reis)", "مجدرة"], []],
+      ["koshari", 150, 5, 26, 3, 300, ["Koshari", "Koshari", "كشري"], []],
+      ["ful", 110, 6, 14, 3.5, 200, ["Ful medames (fava beans)", "Ful Medames (Dicke Bohnen)", "فول مدمس"], []],
+      ["shakshuka", 90, 4.5, 6, 5.5, 250, ["Shakshuka", "Shakshuka", "شكشوكة"], []],
+      ["manakish", 280, 7, 38, 11, 120, ["Manakish zaatar", "Manakish mit Zaatar", "مناقيش زعتر"], []],
+      ["kibbeh", 220, 11, 18, 11, 120, ["Kibbeh", "Kibbeh", "كبة"], []],
+      ["dolma", 140, 3, 18, 6, 150, ["Dolma (stuffed vine leaves)", "Dolma (gefüllte Weinblätter)", "دولمة (ورق عنب)"], []],
+      ["babaghanoush", 100, 2.5, 8, 7, 100, ["Baba ghanoush", "Baba Ghanoush", "بابا غنوج"], []],
+      ["labneh", 120, 5, 4, 9, 80, ["Labneh", "Labneh", "لبنة"], []],
+      ["muhammara", 200, 3, 14, 15, 60, ["Muhammara (pepper & walnut dip)", "Muhammara (Paprika-Walnuss-Dip)", "محمرة"], []],
+      ["baklava", 430, 6, 50, 23, 50, ["Baklava", "Baklava", "بقلاوة"], []],
+      ["kunafa", 350, 7, 45, 16, 120, ["Kunafa", "Kunafa", "كنافة"], []],
+      ["basbousa", 330, 5, 48, 13, 100, ["Basbousa", "Basbousa", "بسبوسة"], []],
+      ["mahalabia", 110, 3, 17, 3.5, 150, ["Mahalabia (milk pudding)", "Mahalabia (Milchpudding)", "مهلبية"], []],
+      ["sayadieh", 160, 13, 18, 4, 250, ["Sayadieh (spiced fish & rice)", "Sayadieh (Fisch mit Reis)", "صيادية"], []],
+      ["maqluba", 150, 9, 18, 5, 300, ["Maqluba", "Maqluba", "مقلوبة"], []],
+      ["mansaf", 170, 12, 15, 7, 300, ["Mansaf (lamb in yogurt sauce)", "Mansaf (Lamm in Joghurtsauce)", "منسف"], []],
+      ["freekeh", 110, 4, 19, 1.5, 200, ["Freekeh, cooked", "Freekeh, gekocht", "فريكة مطبوخة"], []],
+      ["doner", 210, 15, 8, 13, 200, ["Döner kebab (meat)", "Döner Kebab (Fleisch)", "دونر كباب"], []],
+      ["lahmacun", 230, 10, 28, 8, 150, ["Lahmacun", "Lahmacun", "لحماجون"], []],
+      ["pide", 250, 10, 32, 9, 150, ["Pide (Turkish flatbread boat)", "Pide (türk. Fladenbrot)", "بيدا"], []],
+      ["borek", 300, 8, 30, 16, 120, ["Börek", "Börek", "بورك"], []],
+      ["mercimek", 60, 3, 9, 1.5, 300, ["Mercimek çorbası (red lentil soup)", "Mercimek Çorbası (Linsensuppe)", "شوربة العدس الأحمر"], []],
+      ["simit", 290, 9, 53, 4.5, 100, ["Simit (sesame ring)", "Simit (Sesamring)", "سميط"], []],
+      ["ayran", 40, 1.7, 2.5, 2.5, 250, ["Ayran", "Ayran", "عيران"], []],
+      ["menemen", 110, 5, 5, 8, 200, ["Menemen (Turkish eggs & tomato)", "Menemen (türk. Rührei)", "مينيمن"], []],
+      ["lokum", 380, 0.5, 92, 0.5, 40, ["Turkish delight (lokum)", "Lokum (Türkischer Honig)", "راحة الحلقوم"], []],
+      ["ghormeh", 110, 8, 5, 6.5, 250, ["Ghormeh sabzi (herb stew)", "Ghormeh Sabzi (Kräuterragout)", "قورمه سبزي"], []],
+      ["fesenjan", 220, 12, 10, 15, 200, ["Fesenjan (walnut & pomegranate chicken)", "Fesenjan (Walnuss-Granatapfel-Hähnchen)", "فسنجان"], []],
+      ["ashreshteh", 90, 4.5, 14, 2, 300, ["Ash reshteh (noodle & bean soup)", "Ash Reshteh (Nudelsuppe)", "آش رشته"], []],
+      ["zereshk", 160, 6, 24, 4.5, 250, ["Zereshk polo (barberry rice with chicken)", "Zereshk Polo (Berberitzenreis)", "زرشك بلو"], []],
+      ["moussaka", 130, 6.5, 8, 8, 250, ["Moussaka", "Moussaka", "مسقعة يونانية"], []],
+      ["souvlaki", 180, 20, 2, 10, 150, ["Souvlaki (pork skewers)", "Souvlaki (Schweinespieße)", "سوفلاكي"], []],
+      ["gyros", 210, 16, 3, 15, 150, ["Gyros", "Gyros", "جيروس"], []],
+      ["greeksalad", 90, 2.5, 4, 7, 200, ["Greek salad", "Griechischer Salat", "سلطة يونانية"], []],
+      ["tzatziki", 90, 3.5, 4, 6.5, 100, ["Tzatziki", "Tzatziki", "تزاتزيكي"], []],
+      ["spanakopita", 240, 7, 22, 14, 120, ["Spanakopita (spinach pie)", "Spanakopita (Spinatkuchen)", "سباناكوبيتا"], []],
+      ["feta", 264, 14, 4, 21, 50, ["Feta cheese", "Feta-Käse", "جبن فيتا"], []],
+      ["tikkamasala", 140, 11, 7, 8, 250, ["Chicken tikka masala", "Chicken Tikka Masala", "دجاج تكا ماسالا"], []],
+      ["butterchicken", 150, 11, 6, 9, 250, ["Butter chicken", "Butter Chicken", "دجاج بالزبدة"], []],
+      ["biryani", 160, 7, 22, 5, 300, ["Chicken biryani", "Hähnchen-Biryani", "برياني دجاج"], []],
+      ["dal", 110, 6, 14, 3.5, 200, ["Dal (lentil curry)", "Dal (Linsencurry)", "دال (عدس بالكاري)"], []],
+      ["palakpaneer", 120, 6, 6, 8, 200, ["Palak paneer (spinach & cheese)", "Palak Paneer (Spinat & Käse)", "بالاك بانير"], []],
+      ["chanamasala", 130, 5.5, 17, 4.5, 200, ["Chana masala (chickpea curry)", "Chana Masala (Kichererbsencurry)", "حمص بالكاري"], []],
+      ["samosa", 260, 5, 30, 13, 100, ["Samosa", "Samosa", "سمبوسة"], []],
+      ["naan", 310, 9, 51, 8, 90, ["Naan bread", "Naan-Brot", "خبز نان"], []],
+      ["chapati", 260, 8, 46, 5, 60, ["Chapati / roti", "Chapati / Roti", "تشاباتي"], []],
+      ["dosa", 230, 5, 38, 6, 120, ["Dosa (rice crepe)", "Dosa (Reispfannkuchen)", "دوسا"], []],
+      ["idli", 140, 4, 28, 1, 100, ["Idli (steamed rice cakes)", "Idli (Reiskuchen)", "إيدلي"], []],
+      ["pakora", 290, 7, 26, 18, 100, ["Pakora", "Pakora", "باكورا"], []],
+      ["tandoori", 150, 20, 3, 6, 150, ["Tandoori chicken", "Tandoori-Hähnchen", "دجاج تندوري"], []],
+      ["korma", 150, 10, 7, 9, 250, ["Chicken korma", "Hähnchen-Korma", "كورما دجاج"], []],
+      ["raita", 70, 3, 5, 4, 100, ["Raita", "Raita", "رايتا"], []],
+      ["mangolassi", 90, 2.5, 15, 2, 250, ["Mango lassi", "Mango-Lassi", "لاسي بالمانجو"], []],
+      ["gulabjamun", 380, 5, 52, 17, 80, ["Gulab jamun", "Gulab Jamun", "جلاب جامون"], []],
+      ["paneer", 265, 18, 4, 20, 80, ["Paneer (fresh cheese)", "Paneer (Frischkäse)", "بانير (جبن طازج)"], []],
+      ["aloogobi", 90, 2.5, 12, 3.5, 200, ["Aloo gobi (potato & cauliflower)", "Aloo Gobi (Kartoffel & Blumenkohl)", "ألو غوبي"], []],
+      ["pavbhaji", 130, 3.5, 16, 6, 250, ["Pav bhaji (spiced vegetables & roll)", "Pav Bhaji (Gemüse & Brötchen)", "باف بهاجي"], []],
+      ["friedrice", 160, 4.5, 24, 5, 200, ["Fried rice", "Gebratener Reis", "روز مقلي"], []],
+      ["chowmein", 140, 6, 20, 4, 200, ["Chow mein (stir-fried noodles)", "Chow Mein (gebratene Nudeln)", "تشاو مين"], []],
+      ["kungpao", 170, 12, 9, 10, 200, ["Kung pao chicken", "Kung-Pao-Hähnchen", "دجاج كونغ باو"], []],
+      ["mapotofu", 110, 7, 5, 7, 200, ["Mapo tofu", "Mapo Tofu", "مابو توفو"], []],
+      ["dumplings", 180, 8, 22, 6.5, 150, ["Dumplings, steamed (pork)", "Dumplings, gedämpft", "دامبلينغ مطهو بالبخار"], []],
+      ["springrolls", 220, 5, 24, 11, 100, ["Spring rolls, fried", "Frühlingsrollen, frittiert", "سبرينغ رول مقلي"], ["spring roll"]],
+      ["swsourpork", 200, 10, 18, 10, 200, ["Sweet & sour pork", "Schweinefleisch süß-sauer", "لحم حلو وحامض"], []],
+      ["hotsoursoup", 60, 3.5, 6, 2.5, 300, ["Hot & sour soup", "Sauer-scharfe Suppe", "شوربة حارة وحامضة"], []],
+      ["wontonsoup", 70, 4, 8, 2.5, 300, ["Wonton soup", "Wan-Tan-Suppe", "شوربة وانتون"], []],
+      ["charsiu", 230, 22, 9, 12, 150, ["Char siu (BBQ pork)", "Char Siu (Grillschwein)", "تشار سيو"], []],
+      ["pekingduck", 330, 20, 2, 27, 150, ["Peking duck", "Pekingente", "بط بكين"], []],
+      ["congee", 50, 1.7, 9, 0.7, 300, ["Congee (rice porridge)", "Congee (Reisbrei)", "كونجي (عصيدة روز)"], []],
+      ["baozi", 220, 8, 32, 6.5, 120, ["Baozi (steamed buns)", "Baozi (Dampfbrötchen)", "باوزي"], []],
+      ["dandan", 180, 7, 22, 7, 200, ["Dan dan noodles", "Dan-Dan-Nudeln", "نودلز دان دان"], []],
+      ["sushi", 150, 6, 24, 3, 150, ["Sushi (nigiri, mixed)", "Sushi (Nigiri, gemischt)", "سوشي"], []],
+      ["sashimi", 120, 20, 0.5, 4, 120, ["Sashimi", "Sashimi", "ساشيمي"], []],
+      ["maki", 140, 5, 23, 3, 150, ["Maki rolls", "Maki-Rollen", "ماكي رول"], []],
+      ["ramen", 120, 6, 16, 3.5, 400, ["Ramen", "Ramen", "رامن"], []],
+      ["misosoup", 30, 2, 3, 1, 250, ["Miso soup", "Misosuppe", "حساء الميسو"], []],
+      ["tempura", 200, 10, 14, 11, 150, ["Shrimp tempura", "Garnelen-Tempura", "تمبورا جمبري"], []],
+      ["teriyaki", 150, 17, 7, 6, 150, ["Teriyaki chicken", "Teriyaki-Hähnchen", "دجاج ترياكي"], []],
+      ["tonkatsu", 280, 16, 12, 19, 150, ["Tonkatsu (breaded pork cutlet)", "Tonkatsu (pan. Schweineschnitzel)", "تونكاتسو"], []],
+      ["udon", 100, 4, 19, 1, 300, ["Udon noodles in broth", "Udon-Nudeln in Brühe", "أودون"], []],
+      ["onigiri", 180, 4, 34, 3, 110, ["Onigiri (rice ball)", "Onigiri (Reisbällchen)", "أونيغيري"], []],
+      ["gyoza", 240, 9, 24, 12, 120, ["Gyoza (pan-fried dumplings)", "Gyoza (gebratene Teigtaschen)", "غيوزا"], []],
+      ["edamame", 120, 11, 9, 5, 100, ["Edamame", "Edamame", "إيدامامي"], []],
+      ["yakitori", 170, 16, 5, 9, 120, ["Yakitori (chicken skewers)", "Yakitori (Hähnchenspieße)", "ياكيتوري"], []],
+      ["okonomiyaki", 160, 6, 17, 7.5, 200, ["Okonomiyaki", "Okonomiyaki", "أوكونوميياكي"], []],
+      ["mochi", 235, 2.5, 50, 2.5, 60, ["Mochi", "Mochi", "موتشي"], []],
+      ["bibimbap", 150, 7, 20, 5, 350, ["Bibimbap", "Bibimbap", "بيبيمباب"], []],
+      ["kimchi", 20, 1.5, 3.5, 0.3, 100, ["Kimchi", "Kimchi", "كيمتشي"], []],
+      ["bulgogi", 170, 15, 9, 8, 200, ["Bulgogi (marinated beef)", "Bulgogi (mariniertes Rind)", "بولغوغي"], []],
+      ["japchae", 140, 4, 22, 4, 200, ["Japchae (glass noodles)", "Japchae (Glasnudeln)", "جابتشاي"], []],
+      ["tteokbokki", 160, 3, 30, 3, 200, ["Tteokbokki (spicy rice cakes)", "Tteokbokki (scharfe Reiskuchen)", "توكبوكي"], []],
+      ["kimbap", 160, 5, 24, 5, 200, ["Kimbap", "Kimbap", "كيمباب"], []],
+      ["kfriedchicken", 250, 16, 12, 15, 150, ["Korean fried chicken", "Koreanisches Brathähnchen", "دجاج مقلي كوري"], []],
+      ["padthai", 180, 8, 24, 6, 300, ["Pad thai", "Pad Thai", "باد تاي"], []],
+      ["tomyum", 60, 5, 5, 2.5, 300, ["Tom yum soup", "Tom-Yum-Suppe", "حساء طوم يام"], []],
+      ["greencurry", 130, 7, 7, 8.5, 250, ["Thai green curry", "Grünes Thai-Curry", "كاري أخضر تايلاندي"], []],
+      ["massaman", 140, 8, 10, 8, 250, ["Massaman curry", "Massaman-Curry", "كاري ماسامان"], []],
+      ["somtam", 60, 2.5, 10, 1.5, 200, ["Som tam (papaya salad)", "Som Tam (Papayasalat)", "سوم تام (سلطة البابايا)"], []],
+      ["mangosticky", 180, 2, 32, 5, 200, ["Mango sticky rice", "Mango Sticky Rice", "روز لزج بالمانجو"], []],
+      ["pho", 55, 5, 7, 1, 400, ["Phở (beef noodle soup)", "Phở (Rind-Nudelsuppe)", "فو (حساء النودلز)"], []],
+      ["banhmi", 230, 10, 28, 8.5, 180, ["Bánh mì sandwich", "Bánh-mì-Sandwich", "ساندويتش بان مي"], []],
+      ["goicuon", 120, 6, 17, 3, 150, ["Gỏi cuốn (fresh spring rolls)", "Gỏi Cuốn (Sommerrollen)", "لفائف طازجة فيتنامية"], []],
+      ["nasigoreng", 160, 6, 22, 5.5, 300, ["Nasi goreng", "Nasi Goreng", "ناسي غورينغ"], []],
+      ["satay", 210, 16, 6, 13, 150, ["Chicken satay with peanut sauce", "Hähnchen-Satay mit Erdnusssauce", "ساتيه دجاج"], []],
+      ["rendang", 190, 16, 6, 11, 200, ["Beef rendang", "Rind-Rendang", "رندانغ لحم"], []],
+      ["laksa", 90, 5, 10, 3.5, 400, ["Laksa (coconut noodle soup)", "Laksa (Kokos-Nudelsuppe)", "لاكسا"], []],
+      ["roticanai", 300, 6, 38, 14, 100, ["Roti canai", "Roti Canai", "روتي كاناي"], []],
+      ["bolognese", 140, 8, 16, 5, 250, ["Spaghetti bolognese", "Spaghetti Bolognese", "سباغيتي بولونيز"], []],
+      ["lasagna", 160, 9, 14, 7.5, 250, ["Lasagna", "Lasagne", "لازانيا"], []],
+      ["risotto", 150, 4, 22, 5, 250, ["Risotto", "Risotto", "ريزوتو"], []],
+      ["carbonara", 170, 8, 20, 6.5, 250, ["Pasta carbonara", "Pasta Carbonara", "باستا كاربونارا"], []],
+      ["bruschetta", 200, 5, 26, 8.5, 100, ["Bruschetta", "Bruschetta", "بروسكيتا"], []],
+      ["caprese", 130, 6, 3.5, 10, 150, ["Caprese salad", "Caprese-Salat", "سلطة كابريزي"], []],
+      ["tiramisu", 290, 5, 28, 18, 120, ["Tiramisu", "Tiramisu", "تيراميسو"], []],
+      ["pannacotta", 200, 3, 16, 14, 120, ["Panna cotta", "Panna Cotta", "بانا كوتا"], []],
+      ["minestrone", 45, 2, 7, 1, 300, ["Minestrone", "Minestrone", "مينيستروني"], []],
+      ["arancini", 220, 5, 28, 10, 120, ["Arancini (fried rice balls)", "Arancini (Reisbällchen)", "أرانشيني"], []],
+      ["focaccia", 250, 7, 40, 7, 80, ["Focaccia", "Focaccia", "فوكاتشا"], []],
+      ["gnocchi", 150, 4, 28, 2.5, 200, ["Gnocchi", "Gnocchi", "نيوكي"], []],
+      ["polenta", 70, 1.7, 14, 0.8, 200, ["Polenta, cooked", "Polenta, gekocht", "بولينتا مطبوخة"], []],
+      ["croissant", 406, 8, 45, 21, 60, ["Croissant", "Croissant", "كرواسون"], []],
+      ["ratatouille", 50, 1.3, 6, 2.5, 200, ["Ratatouille", "Ratatouille", "راتاتوي"], []],
+      ["quiche", 280, 9, 18, 19, 150, ["Quiche lorraine", "Quiche Lorraine", "كيش لورين"], []],
+      ["coqauvin", 130, 13, 3, 7, 250, ["Coq au vin", "Coq au Vin", "دجاج مطبوخ بالنبيذ"], []],
+      ["bourguignon", 140, 14, 4, 7.5, 250, ["Beef bourguignon", "Bœuf Bourguignon", "لحم بورغينيون"], []],
+      ["onionsoup", 45, 2.5, 6, 1.5, 300, ["French onion soup", "Französische Zwiebelsuppe", "حساء البصل الفرنسي"], []],
+      ["crepe", 230, 6, 30, 9, 100, ["Crêpe", "Crêpe", "كريب"], []],
+      ["duckconfit", 290, 22, 0, 22, 150, ["Duck confit", "Entenconfit", "بط كونفي"], []],
+      ["bouillabaisse", 70, 8, 3, 3, 300, ["Bouillabaisse (fish soup)", "Bouillabaisse (Fischsuppe)", "بويابيس"], []],
+      ["nicoise", 110, 7, 6, 6.5, 250, ["Salade niçoise", "Salade Niçoise", "سلطة نيسواز"], []],
+      ["baguette", 290, 9, 56, 2.5, 60, ["Baguette", "Baguette", "باغيت"], []],
+      ["camembert", 300, 20, 0.5, 24, 50, ["Camembert", "Camembert", "كامامبير"], []],
+      ["cremebrulee", 240, 4, 21, 16, 120, ["Crème brûlée", "Crème Brûlée", "كريم بروليه"], []],
+      ["macaron", 450, 5, 65, 19, 40, ["Macarons", "Macarons", "ماكارون"], []],
+      ["painchocolat", 420, 7, 46, 23, 60, ["Pain au chocolat", "Pain au Chocolat", "بان أو شوكولا"], []],
+      ["escargots", 90, 10, 2, 4.5, 100, ["Escargots (snails in garlic butter)", "Escargots (Weinbergschnecken)", "حلزون بالثوم"], []],
+      ["paella", 160, 9, 20, 5, 300, ["Paella", "Paella", "باييا"], []],
+      ["gazpacho", 40, 1.2, 6, 1.5, 250, ["Gazpacho", "Gazpacho", "غازباتشو"], []],
+      ["tortillaes", 160, 6, 14, 9, 150, ["Tortilla española (potato omelette)", "Tortilla Española (Kartoffelomelett)", "تورتيا إسبانية"], []],
+      ["patatasbravas", 180, 2.5, 22, 9, 150, ["Patatas bravas", "Patatas Bravas", "بطاطس برافاس"], []],
+      ["jamon", 330, 28, 0, 24, 50, ["Jamón ibérico", "Jamón Ibérico", "خامون إيبيري"], []],
+      ["croquetas", 240, 7, 20, 15, 100, ["Croquetas", "Croquetas (Kroketten)", "كروكيتاس"], []],
+      ["empanada", 260, 8, 28, 13, 120, ["Empanada", "Empanada", "إمبانادا"], []],
+      ["gambas", 170, 14, 2, 12, 150, ["Gambas al ajillo (garlic prawns)", "Gambas al Ajillo (Knoblauchgarnelen)", "جمبري بالثوم"], []],
+      ["bratwurst", 290, 12, 3, 26, 100, ["Bratwurst", "Bratwurst", "براتفورست"], []],
+      ["schnitzel", 230, 16, 12, 13, 150, ["Schnitzel (breaded)", "Schnitzel (paniert)", "شنيتسل"], []],
+      ["sauerkraut", 20, 1, 3.5, 0.2, 150, ["Sauerkraut", "Sauerkraut", "مخلل الملفوف"], []],
+      ["spaetzle", 150, 5, 24, 3.5, 200, ["Spätzle", "Spätzle", "شبايتزله"], []],
+      ["pretzel", 280, 8, 52, 4, 90, ["Pretzel (Brezel)", "Brezel", "بريتزل"], []],
+      ["currywurst", 240, 9, 10, 18, 150, ["Currywurst", "Currywurst", "كاري فورست"], []],
+      ["kartoffelsalat", 110, 2, 14, 5, 150, ["Potato salad", "Kartoffelsalat", "سلطة البطاطس"], []],
+      ["apfelstrudel", 230, 3, 34, 9, 120, ["Apple strudel", "Apfelstrudel", "شترودل التفاح"], []],
+      ["schwarzwaelder", 320, 4.5, 38, 17, 120, ["Black Forest cake", "Schwarzwälder Kirschtorte", "كيك الغابة السوداء"], []],
+      ["goulash", 110, 11, 5, 5, 250, ["Goulash", "Gulasch", "غولاش"], []],
+      ["knodel", 140, 4, 26, 2, 150, ["Dumplings (Knödel)", "Knödel", "كنودل (زلابية ألمانية)"], []],
+      ["fishchips", 230, 10, 24, 10.5, 250, ["Fish & chips", "Fish & Chips", "سمك وبطاطس مقلية"], []],
+      ["englishbreakfast", 180, 10, 8, 12, 300, ["Full English breakfast", "Full English Breakfast", "فطور إنجليزي كامل"], []],
+      ["shepherdspie", 120, 6, 12, 5.5, 250, ["Shepherd's pie", "Shepherd's Pie", "فطيرة الراعي"], []],
+      ["scone", 360, 6, 48, 16, 80, ["Scone", "Scone", "سكون"], []],
+      ["borscht", 50, 2, 7, 1.5, 300, ["Borscht", "Borschtsch", "بورشت"], []],
+      ["pierogi", 210, 6, 30, 7, 150, ["Pierogi", "Piroggen", "بييروغي"], []],
+      ["pelmeni", 230, 10, 24, 10, 150, ["Pelmeni", "Pelmeni", "بيلميني"], []],
+      ["blini", 230, 6, 32, 8.5, 100, ["Blini", "Blini", "بليني"], []],
+      ["stroganoff", 150, 11, 5, 9.5, 250, ["Beef stroganoff", "Boeuf Stroganoff", "لحم ستروغانوف"], []],
+      ["cabbagerolls", 110, 6, 10, 5, 200, ["Cabbage rolls", "Kohlrouladen", "ملفوف محشي"], []],
+      ["cevapi", 240, 16, 2, 19, 150, ["Ćevapi (grilled minced meat)", "Ćevapi", "تشيفابي"], []],
+      ["swedishmeatballs", 200, 12, 8, 13, 200, ["Swedish meatballs", "Schwedische Hackbällchen", "كرات لحم سويدية"], []],
+      ["gravlax", 180, 18, 1, 11, 80, ["Gravlax (cured salmon)", "Gravlax (gebeizter Lachs)", "غرافلاكس"], []],
+      ["cinnamonbun", 350, 5, 50, 14, 90, ["Cinnamon bun", "Zimtschnecke", "بريوش بالقرفة"], []],
+      ["tacos", 200, 9, 16, 11, 150, ["Tacos", "Tacos", "تاكوس"], []],
+      ["quesadilla", 280, 12, 26, 14, 150, ["Quesadilla", "Quesadilla", "كيساديا"], []],
+      ["guacamole", 160, 2, 9, 15, 80, ["Guacamole", "Guacamole", "غواكامولي"], []],
+      ["nachos", 330, 6, 36, 18, 150, ["Nachos with cheese", "Nachos mit Käse", "ناتشوز بالجبن"], []],
+      ["enchiladas", 170, 8, 18, 7.5, 200, ["Enchiladas", "Enchiladas", "إنشيلادا"], []],
+      ["tamales", 200, 6, 22, 10, 150, ["Tamales", "Tamales", "تاماليس"], []],
+      ["pozole", 70, 5, 8, 2, 300, ["Pozole", "Pozole", "بوزولي"], []],
+      ["fajitas", 150, 11, 8, 8, 200, ["Fajitas (chicken)", "Fajitas (Hähnchen)", "فاهيتا دجاج"], []],
+      ["salsa", 30, 1.3, 6, 0.3, 80, ["Salsa", "Salsa", "صلصة سالسا"], []],
+      ["pancakes", 230, 6, 35, 7, 120, ["Pancakes", "Pfannkuchen (amerik.)", "بان كيك"], []],
+      ["waffles", 290, 7, 36, 13, 100, ["Waffles", "Waffeln", "وافل"], []],
+      ["maccheese", 160, 6, 18, 7, 200, ["Mac & cheese", "Mac & Cheese", "ماك آند تشيز"], []],
+      ["bbqribs", 290, 20, 6, 21, 200, ["BBQ ribs", "BBQ-Rippchen", "أضلاع مشوية"], []],
+      ["pulledpork", 200, 22, 2, 11, 150, ["Pulled pork", "Pulled Pork", "لحم مسحّب"], []],
+      ["coleslaw", 150, 1.5, 10, 12, 120, ["Coleslaw", "Coleslaw (Krautsalat)", "كول سلو"], []],
+      ["cornbread", 330, 6, 44, 14, 80, ["Cornbread", "Maisbrot", "خبز الذرة"], []],
+      ["clamchowder", 90, 4, 10, 3.5, 300, ["Clam chowder", "Clam Chowder (Muschelsuppe)", "حساء المحار"], []],
+      ["caesarsalad", 150, 5, 7, 11, 200, ["Caesar salad", "Caesar Salad", "سلطة سيزار"], []],
+      ["grilledcheese", 350, 11, 30, 21, 120, ["Grilled cheese sandwich", "Grilled Cheese Sandwich", "ساندويتش جبن مشوي"], []],
+      ["meatloaf", 200, 15, 8, 12, 150, ["Meatloaf", "Hackbraten", "رغيف اللحم"], []],
+      ["applepie", 240, 2, 34, 11, 130, ["Apple pie", "Apfelkuchen (Pie)", "فطيرة التفاح"], []],
+      ["cheesecake", 320, 6, 26, 22, 120, ["Cheesecake", "Käsekuchen (amerik.)", "تشيز كيك"], []],
+      ["brownie", 470, 5, 62, 23, 60, ["Brownie", "Brownie", "براوني"], []],
+      ["donut", 450, 5, 50, 26, 60, ["Donut", "Donut", "دونات"], []],
+      ["bagel", 260, 10, 49, 2, 100, ["Bagel", "Bagel", "بيغل"], []],
+      ["buffalowings", 290, 20, 4, 22, 150, ["Buffalo wings", "Buffalo Wings", "أجنحة بافالو"], []],
+      ["chiliconcarne", 130, 9, 11, 5.5, 250, ["Chili con carne", "Chili con Carne", "تشيلي كون كارني"], []],
+      ["jollof", 150, 4.5, 24, 4, 250, ["Jollof rice", "Jollof-Reis", "روز جولوف"], []],
+      ["fufu", 110, 1.5, 25, 0.5, 200, ["Fufu", "Fufu", "فوفو"], []],
+      ["egusi", 150, 8, 6, 11, 200, ["Egusi soup", "Egusi-Suppe", "حساء إيغوسي"], []],
+      ["suya", 250, 22, 3, 17, 150, ["Suya (spiced grilled meat)", "Suya (gewürztes Grillfleisch)", "سويا (لحم مشوي متبل)"], []],
+      ["injera", 170, 5, 35, 1, 120, ["Injera", "Injera", "إينجيرا"], []],
+      ["dorowat", 150, 14, 5, 8.5, 250, ["Doro wat (Ethiopian chicken stew)", "Doro Wat (äthiop. Hähnchenragout)", "دورو وات"], []],
+      ["bobotie", 160, 11, 12, 7.5, 250, ["Bobotie", "Bobotie", "بوبوتي"], []],
+      ["pilau", 160, 7, 24, 4, 250, ["Pilau (East African spiced rice)", "Pilau (gewürzter Reis)", "بيلاو"], []],
+      ["ugali", 120, 2.5, 27, 0.5, 200, ["Ugali (maize porridge)", "Ugali (Maisbrei)", "أوغالي"], []],
+      ["mafe", 150, 9, 9, 9, 250, ["Mafé (peanut stew)", "Mafé (Erdnussragout)", "مافي (يخنة الفول السوداني)"], []],
+      ["yassa", 130, 15, 6, 5, 250, ["Chicken yassa", "Hähnchen-Yassa", "ياسا دجاج"], []],
+      ["thieboudienne", 140, 11, 17, 3, 300, ["Thieboudienne (fish & rice)", "Thieboudienne (Fisch & Reis)", "تيبوديين (سمك وروز)"], []],
+      ["feijoada", 150, 9, 14, 6.5, 300, ["Feijoada (bean & pork stew)", "Feijoada (Bohnen-Fleisch-Eintopf)", "فيجوادا"], []],
+      ["paodequeijo", 330, 6, 38, 17, 60, ["Pão de queijo (cheese buns)", "Pão de Queijo (Käsebrötchen)", "باو دي كيجو"], []],
+      ["coxinha", 300, 10, 30, 15, 100, ["Coxinha (chicken croquettes)", "Coxinha (Hähnchenkroketten)", "كوشينيا"], []],
+      ["acai", 130, 2, 16, 6.5, 200, ["Açaí bowl", "Açaí-Bowl", "وعاء الأساي"], []],
+      ["ceviche", 70, 9, 5, 1.5, 200, ["Ceviche", "Ceviche", "سيفيتشي"], []],
+      ["lomosaltado", 150, 11, 13, 6, 250, ["Lomo saltado", "Lomo Saltado", "لومو سالتادو"], []],
+      ["arepa", 220, 5, 35, 6.5, 100, ["Arepa", "Arepa", "أريبا"], []],
+      ["whitebread", 265, 8, 49, 3.5, 50, ["White bread", "Weißbrot", "خبز أبيض"], []],
+      ["butter", 717, 0.9, 0.1, 81, 15, ["Butter", "Butter", "زبدة"], []],
+      ["mayo", 680, 1, 1, 75, 15, ["Mayonnaise", "Mayonnaise", "مايونيز"], []],
+      ["ketchup", 112, 1.3, 26, 0.2, 20, ["Ketchup", "Ketchup", "كاتشب"], []],
+      ["peanutbutter", 588, 25, 20, 50, 30, ["Peanut butter", "Erdnussbutter", "زبدة الفول السوداني"], []],
+      ["jam", 250, 0.4, 62, 0.1, 20, ["Jam / marmalade", "Marmelade / Konfitüre", "مربى"], []],
+      ["nutella", 539, 6.3, 57, 31, 30, ["Hazelnut spread (Nutella)", "Nuss-Nougat-Creme", "كريمة البندق (نوتيلا)"], []],
+      ["creamcheese", 342, 6, 4, 34, 30, ["Cream cheese", "Frischkäse (Doppelrahm)", "جبن كريمي"], []],
+      ["mozzarella", 280, 18, 3, 22, 60, ["Mozzarella", "Mozzarella", "موزاريلا"], []],
+      ["parmesan", 431, 38, 4, 29, 20, ["Parmesan", "Parmesan", "بارميزان"], []],
+      ["tofu", 76, 8, 2, 4.5, 120, ["Tofu", "Tofu", "توفو"], []],
+      ["tempeh", 192, 19, 9, 11, 100, ["Tempeh", "Tempeh", "تمبيه"], []],
+      ["quinoa", 120, 4.4, 21, 1.9, 180, ["Quinoa, cooked", "Quinoa, gekocht", "كينوا مطبوخة"], []],
+      ["bulgur", 83, 3.1, 18, 0.2, 180, ["Bulgur, cooked", "Bulgur, gekocht", "برغل مطبوخ"], []],
+      ["sweetpotato", 86, 1.6, 20, 0.1, 150, ["Sweet potato", "Süßkartoffel", "بطاطا حلوة"], []],
+      ["corn", 96, 3.4, 21, 1.5, 150, ["Sweet corn", "Mais", "ذرة حلوة"], []],
+      ["peas", 81, 5.4, 14, 0.4, 150, ["Green peas", "Grüne Erbsen", "بازلاء خضراء"], []],
+      ["carrots", 41, 0.9, 10, 0.2, 120, ["Carrots", "Karotten", "جزر"], []],
+      ["spinach", 23, 2.9, 3.6, 0.4, 150, ["Spinach", "Spinat", "سبانخ"], []],
+      ["kale", 49, 4.3, 9, 0.9, 100, ["Kale", "Grünkohl", "كيل (ملفوف مجعد)"], []],
+      ["greenbeans", 31, 1.8, 7, 0.2, 150, ["Green beans", "Grüne Bohnen", "فاصوليا خضراء"], []],
+      ["eggplant", 25, 1, 6, 0.2, 150, ["Eggplant / aubergine", "Aubergine", "باذنجان"], []],
+      ["cabbage", 25, 1.3, 6, 0.1, 150, ["Cabbage", "Weißkohl", "ملفوف"], []],
+      ["chickpeas", 164, 9, 27, 2.6, 150, ["Chickpeas, cooked", "Kichererbsen, gekocht", "حمص مطبوخ"], []],
+      ["blackbeans", 132, 8.9, 24, 0.5, 150, ["Black beans, cooked", "Schwarze Bohnen, gekocht", "فاصوليا سوداء مطبوخة"], []],
+      ["kidneybeans", 127, 8.7, 23, 0.5, 150, ["Kidney beans, cooked", "Kidneybohnen, gekocht", "فاصوليا حمراء مطبوخة"], []],
+      ["soymilk", 43, 3.3, 2, 2, 250, ["Soy milk", "Sojamilch", "حليب الصويا"], []],
+      ["coconutmilk", 197, 2, 3, 21, 100, ["Coconut milk (canned)", "Kokosmilch (Dose)", "حليب جوز الهند"], []],
+      ["lemon", 29, 1.1, 9, 0.3, 80, ["Lemon", "Zitrone", "ليمون"], []],
+      ["grapes", 69, 0.7, 18, 0.2, 150, ["Grapes", "Trauben", "عنب"], []],
+      ["watermelon", 30, 0.6, 7.6, 0.2, 250, ["Watermelon", "Wassermelone", "دلاح (بطيخ)"], []],
+      ["melon", 34, 0.8, 8, 0.2, 200, ["Melon (cantaloupe)", "Honigmelone", "شمام"], []],
+      ["peach", 39, 0.9, 10, 0.3, 150, ["Peach", "Pfirsich", "خوخ"], []],
+      ["pear", 57, 0.4, 15, 0.1, 170, ["Pear", "Birne", "إجاص"], []],
+      ["mango", 60, 0.8, 15, 0.4, 150, ["Mango", "Mango", "مانجو"], []],
+      ["kiwi", 61, 1.1, 15, 0.5, 100, ["Kiwi", "Kiwi", "كيوي"], []],
+      ["blueberries", 57, 0.7, 14, 0.3, 125, ["Blueberries", "Blaubeeren", "توت أزرق"], []],
+      ["cherries", 63, 1.1, 16, 0.2, 150, ["Cherries", "Kirschen", "كرز"], []],
+      ["grapefruit", 42, 0.8, 11, 0.1, 200, ["Grapefruit", "Grapefruit", "غريفون"], []],
+      ["walnuts", 654, 15, 14, 65, 30, ["Walnuts", "Walnüsse", "جوز (كركاع)"], []],
+      ["peanuts", 567, 26, 16, 49, 30, ["Peanuts", "Erdnüsse", "فول سوداني (كاوكاو)"], []],
+      ["cashews", 553, 18, 30, 44, 30, ["Cashews", "Cashewkerne", "كاجو"], []],
+      ["pistachios", 562, 20, 28, 45, 30, ["Pistachios", "Pistazien", "فستق"], []],
+      ["chiaseeds", 486, 17, 42, 31, 20, ["Chia seeds", "Chiasamen", "بذور الشيا"], []],
+      ["raisins", 299, 3.1, 79, 0.5, 40, ["Raisins", "Rosinen", "زبيب"], []],
+      ["popcorn", 387, 13, 63, 4.5, 30, ["Popcorn (air-popped)", "Popcorn (ungezuckert)", "فشار"], []],
+      ["darkchocolate", 546, 5, 46, 36, 30, ["Dark chocolate", "Zartbitterschokolade", "شوكولاتة داكنة"], []],
+      ["milkchocolate", 535, 7.6, 59, 30, 40, ["Milk chocolate", "Vollmilchschokolade", "شوكولاتة بالحليب"], []],
+      ["chips", 536, 7, 53, 35, 40, ["Potato chips", "Kartoffelchips", "رقائق بطاطس"], []],
+      ["granola", 471, 10, 64, 20, 50, ["Granola", "Granola", "غرانولا"], []],
+      ["cornflakes", 357, 7.5, 84, 0.4, 40, ["Cornflakes", "Cornflakes", "رقائق الذرة"], []],
+      ["wholemilk", 61, 3.2, 4.8, 3.3, 250, ["Milk, whole", "Vollmilch", "حليب كامل الدسم"], []],
+      ["cream", 340, 2.8, 3, 36, 50, ["Cream (whipping)", "Sahne", "قشدة"], []],
+      ["sourcream", 198, 2.4, 4.6, 19, 50, ["Sour cream", "Saure Sahne", "قشدة حامضة"], []],
+      ["cottagecheese", 98, 11, 3.4, 4.3, 100, ["Cottage cheese", "Hüttenkäse", "جبن قريش"], []],
+      ["ricotta", 174, 11, 3, 13, 80, ["Ricotta", "Ricotta", "ريكوتا"], []],
+      ["omelette", 154, 11, 1, 12, 120, ["Omelette", "Omelett", "أومليت"], []],
+      ["porridge", 68, 2.4, 12, 1.4, 200, ["Porridge (cooked oatmeal)", "Porridge (Haferbrei)", "عصيدة الشوفان"], []],
+      ["turkeybreast", 147, 30, 0, 2.1, 120, ["Turkey breast, cooked", "Putenbrust, gegart", "صدر ديك رومي مطبوخ"], []],
+      ["lamb", 282, 25, 0, 20, 150, ["Lamb, cooked", "Lammfleisch, gegart", "لحم ضأن مطبوخ"], []],
+      ["porkchop", 231, 27, 0, 13, 150, ["Pork chop, cooked", "Schweinekotelett, gegart", "قطعة لحم خنزير"], []],
+      ["bacon", 541, 37, 1.4, 42, 30, ["Bacon, cooked", "Speck, gebraten", "لحم مقدد"], []],
+      ["ham", 145, 21, 1.5, 6, 60, ["Ham", "Schinken", "جامبون"], []],
+      ["salami", 336, 22, 2.5, 26, 40, ["Salami", "Salami", "سلامي"], []],
+      ["smokedsalmon", 117, 18, 0, 4.5, 60, ["Smoked salmon", "Räucherlachs", "سلمون مدخن"], []],
+      ["sardinescan", 208, 25, 0, 11, 100, ["Sardines, canned in oil", "Sardinen (Dose, Öl)", "سردين معلب بالزيت"], []],
+      ["mackerel", 205, 19, 0, 14, 150, ["Mackerel", "Makrele", "ماكريل"], []],
+      ["cod", 105, 23, 0, 0.9, 150, ["Cod, cooked", "Kabeljau, gegart", "سمك القد مطبوخ"], []],
+      ["shrimp", 99, 24, 0.2, 0.3, 120, ["Shrimp / prawns", "Garnelen", "قمرون (جمبري)"], []],
+      ["crab", 97, 19, 0, 1.5, 100, ["Crab", "Krebsfleisch", "سلطعون"], []],
+      ["squid", 92, 16, 3, 1.4, 120, ["Squid / calamari", "Tintenfisch", "حبار (كلامار)"], []],
+      ["mussels", 86, 12, 3.7, 2.2, 150, ["Mussels", "Miesmuscheln", "بلح البحر"], []],
+      ["cola", 42, 0, 10.6, 0, 330, ["Cola", "Cola", "كولا"], []],
+      ["lemonade", 40, 0, 10, 0, 250, ["Lemonade", "Limonade", "ليموناضة"], []],
+      ["beer", 43, 0.5, 3.6, 0, 330, ["Beer", "Bier", "بيرة"], []],
+      ["redwine", 85, 0.1, 2.6, 0, 150, ["Red wine", "Rotwein", "نبيذ أحمر"], []],
+      ["whitewine", 82, 0.1, 2.6, 0, 150, ["White wine", "Weißwein", "نبيذ أبيض"], []],
+      ["cappuccino", 45, 2, 4.5, 2, 180, ["Cappuccino", "Cappuccino", "كابتشينو"], []],
+      ["latte", 50, 2.8, 5, 2, 250, ["Café latte", "Caffè Latte", "قهوة بالحليب (لاتيه)"], []],
+      ["hotchocolate", 85, 3, 13, 2.5, 250, ["Hot chocolate", "Heiße Schokolade", "شوكولاتة ساخنة"], []],
+      ["milkshake", 110, 3.5, 17, 3, 300, ["Milkshake", "Milchshake", "ميلك شيك"], []],
+      ["smoothie", 60, 1, 12, 1, 250, ["Fruit smoothie", "Frucht-Smoothie", "سموذي فواكه"], []],
+      ["sugar", 387, 0, 100, 0, 10, ["Sugar", "Zucker", "سكر"], []],
+      ["proteinbar", 380, 20, 40, 14, 60, ["Protein bar", "Proteinriegel", "بار بروتين"], []]
+    ];
+    var CLASS2CAT = {};
+    CATALOG.forEach(function (c) { c[7].forEach(function (cl) { CLASS2CAT[cl.toLowerCase()] = c; }); });
+
+    var EXERCISES = [
+      ["walking", 3.5, ["Walking", "Gehen", "المشي"]],
+      ["walkfast", 4.3, ["Brisk walking", "Zügiges Gehen", "مشي سريع"]],
+      ["running", 9.8, ["Running", "Laufen", "الجري"]],
+      ["cycling", 7.5, ["Cycling", "Radfahren", "ركوب الدراجة"]],
+      ["swimming", 8.3, ["Swimming", "Schwimmen", "السباحة"]],
+      ["strength", 5.0, ["Strength training", "Krafttraining", "تمارين القوة"]],
+      ["football", 7.0, ["Football / soccer", "Fußball", "كرة القدم"]],
+      ["basketball", 6.5, ["Basketball", "Basketball", "كرة السلة"]],
+      ["hiking", 6.0, ["Hiking", "Wandern", "المشي في الطبيعة"]],
+      ["rowing", 7.0, ["Rowing", "Rudern", "التجديف"]],
+      ["dancing", 5.5, ["Dancing", "Tanzen", "الرقص"]],
+      ["yoga", 3.0, ["Yoga", "Yoga", "يوغا"]],
+      ["cleaning", 3.3, ["House cleaning", "Hausputz", "تنظيف المنزل"]],
+      ["boxing", 9.0, ["Boxing", "Boxen", "الملاكمة"]]
+    ];
+    var MEALS = ["breakfast", "lunch", "dinner", "snack"];
+    var LANGIDX = { en: 0, de: 1, ar: 2 };
+
+    /* ================= state ================= */
+    var LSKEY = "saveyourlife.v1";
+    var state = { lang: "en", profile: null, days: {}, weights: [] };
+    try {
+      var raw = localStorage.getItem(LSKEY);
+      if (raw) { var parsed = JSON.parse(raw); if (parsed && typeof parsed === "object") state = Object.assign(state, parsed); }
+    } catch (e) {}
+    function save() { try { localStorage.setItem(LSKEY, JSON.stringify(state)); } catch (e) {} }
+
+    var viewDate = new Date(); viewDate.setHours(0, 0, 0, 0);
+    var currentMeal = "lunch";
+    var portionFood = null; /* {name, kcal, p, c, f (per 100g), grams} */
+    var photoThumb = null;
+
+    function $(id) { return document.getElementById(id); }
+    function t(key) { return (STR[state.lang] && STR[state.lang][key]) || STR.en[key] || key; }
+    function fmt(key, map) { var s = t(key); Object.keys(map).forEach(function (k) { s = s.replace("{" + k + "}", map[k]); }); return s; }
+    function dateKey(d) { return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+    function day() {
+      var k = dateKey(viewDate);
+      if (!state.days[k]) state.days[k] = { entries: [], exercises: [], water: 0 };
+      return state.days[k];
+    }
+    function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (ch) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]; }); }
+    function toast(msg) {
+      var el = $("toast"); el.textContent = msg; el.classList.add("on");
+      clearTimeout(toast._h); toast._h = setTimeout(function () { el.classList.remove("on"); }, 2200);
+    }
+    function catName(c) { return c[6][LANGIDX[state.lang]] || c[6][0]; }
+    function round(x) { return Math.round(x); }
+
+    /* ================= profile math (research: YAZIO factors, Mifflin-St Jeor) ================= */
+    function computeGoal(p) {
+      var bmr = 10 * p.weight + 6.25 * p.height - 5 * p.age + (p.sex === "m" ? 5 : -161);
+      var tdee = bmr * p.activity;
+      var adj = 0;
+      if (p.goal === "lose") adj = -750 * p.rate;
+      if (p.goal === "gain") adj = 750 * p.rate;
+      var target = tdee + adj;
+      var floor = p.sex === "f" ? 1200 : 1500, floored = false;
+      if (target < floor) { target = floor; floored = true; }
+      target = Math.round(target);
+      return {
+        bmr: Math.round(bmr), tdee: Math.round(tdee), adj: Math.round(adj), target: target, floored: floored, floor: floor,
+        carbs: Math.round(target * 0.50 / 4), protein: Math.round(target * 0.20 / 4), fat: Math.round(target * 0.30 / 9)
+      };
+    }
+    /* goal for a specific date: per-weekday target + gram-macro overrides */
+    function goalForDate(date) {
+      var p = state.profile; if (!p) return null;
+      var g = computeGoal(p);
+      var target = g.target;
+      if (p.dayGoals && p.dayGoals[date.getDay()]) target = p.dayGoals[date.getDay()];
+      var carbs = g.carbs, protein = g.protein, fat = g.fat;
+      if (p.macroGrams) { protein = p.macroGrams.p; carbs = p.macroGrams.c; fat = p.macroGrams.f; }
+      else if (target !== g.target && g.target > 0) {
+        var r = target / g.target;
+        carbs = Math.round(g.carbs * r); protein = Math.round(g.protein * r); fat = Math.round(g.fat * r);
+      }
+      return { target: target, carbs: carbs, protein: protein, fat: fat };
+    }
+
+    /* ================= rendering ================= */
+    function applyI18n() {
+      document.documentElement.lang = state.lang;
+      document.documentElement.dir = state.lang === "ar" ? "rtl" : "ltr";
+      document.querySelectorAll("[data-i18n]").forEach(function (el) { el.textContent = t(el.getAttribute("data-i18n")); });
+      document.querySelectorAll("[data-i18n-ph]").forEach(function (el) { el.setAttribute("placeholder", t(el.getAttribute("data-i18n-ph"))); });
+      document.querySelectorAll(".langseg button").forEach(function (b) { b.classList.toggle("on", b.getAttribute("data-lang") === state.lang); });
+    }
+
+    function dayTotals(d) {
+      var eaten = 0, p = 0, c = 0, f = 0, burned = 0;
+      d.entries.forEach(function (e) { eaten += e.kcal; p += e.p; c += e.c; f += e.f; });
+      d.exercises.forEach(function (e) { burned += e.kcal; });
+      return { eaten: eaten, p: p, c: c, f: f, burned: burned };
+    }
+
+    function renderDate() {
+      var todayK = dateKey(new Date()), k = dateKey(viewDate);
+      var opts = { weekday: "short", day: "numeric", month: "short" };
+      var locale = state.lang === "ar" ? "ar-MA" : state.lang === "de" ? "de-DE" : "en-GB";
+      var label = viewDate.toLocaleDateString(locale, opts);
+      if (k === todayK) label = t("today_") + " · " + label;
+      $("dateLabel").textContent = label;
+    }
+
+    function dropSVG(filled) {
+      return '<svg viewBox="0 0 24 30" aria-hidden="true"><path d="M12 2C12 2 4 13.5 4 19a8 8 0 0 0 16 0C20 13.5 12 2 12 2Z" fill="' + (filled ? "#3d8bc2" : "none") + '" stroke="#3d8bc2" stroke-width="1.6"/></svg>';
+    }
+
+    function renderToday() {
+      renderDate();
+      var d = day(), tot = dayTotals(d), prof = state.profile;
+      $("setupNudge").classList.toggle("hidden", !!prof);
+      $("ringCard").classList.toggle("hidden", !prof);
+      if (prof) {
+        var g = goalForDate(viewDate);
+        var remaining = g.target + tot.burned - tot.eaten;
+        $("ringNum").textContent = remaining;
+        $("ringNum").style.color = remaining < 0 ? "var(--danger)" : "";
+        var frac = g.target > 0 ? Math.max(0, Math.min(1, (tot.eaten - tot.burned) / g.target)) : 0;
+        $("ringArc").style.strokeDashoffset = String(527.8 * (1 - frac));
+        $("ringArc").style.stroke = remaining < 0 ? "var(--danger)" : "var(--brand)";
+        $("stGoal").textContent = g.target;
+        $("stEaten").textContent = round(tot.eaten);
+        $("stBurned").textContent = round(tot.burned);
+        $("mCarbsT").textContent = round(tot.c) + " / " + g.carbs + " g";
+        $("mProtT").textContent = round(tot.p) + " / " + g.protein + " g";
+        $("mFatT").textContent = round(tot.f) + " / " + g.fat + " g";
+        $("mCarbs").style.width = Math.min(100, g.carbs ? tot.c / g.carbs * 100 : 0) + "%";
+        $("mProt").style.width = Math.min(100, g.protein ? tot.p / g.protein * 100 : 0) + "%";
+        $("mFat").style.width = Math.min(100, g.fat ? tot.f / g.fat * 100 : 0) + "%";
+      }
+      /* diary */
+      var html = "";
+      var dayGoal = prof ? goalForDate(viewDate) : null;
+      MEALS.forEach(function (m) {
+        var entries = d.entries.filter(function (e) { return e.meal === m; });
+        var mk = entries.reduce(function (s, e) { return s + e.kcal; }, 0);
+        var mTarget = dayGoal && prof.mealPcts ? Math.round(dayGoal.target * (prof.mealPcts[m] || 0) / 100) : 0;
+        html += '<div class="mealhead"><h3>' + esc(t(m)) + '</h3><span class="mkcal">' + round(mk) + (mTarget ? ' / ' + mTarget : '') + ' kcal</span>' +
+          '<button class="addbtn" data-addmeal="' + m + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>' + esc(t("add")) + '</button></div>';
+        if (!entries.length) html += '<div class="empty">' + esc(t("emptyMeal")) + '</div>';
+        entries.forEach(function (e) {
+          html += '<div class="entry">' + (e.thumb ? '<img class="thumb" src="' + e.thumb + '" alt="" />' : "") +
+            '<div class="en"><b>' + esc(e.name) + '</b><small>' + e.grams + ' g · P ' + round(e.p) + ' · C ' + round(e.c) + ' · F ' + round(e.f) + '</small></div>' +
+            '<span class="ek">' + round(e.kcal) + ' kcal</span>' +
+            '<button class="del" data-del="' + e.id + '" aria-label="' + esc(t("delete")) + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13"/></svg></button></div>';
+        });
+      });
+      $("diary").innerHTML = html;
+      /* water */
+      $("waterMl").textContent = d.water;
+      var drops = "";
+      for (var i = 0; i < 8; i++) drops += dropSVG(d.water >= (i + 1) * 250);
+      $("drops").innerHTML = drops;
+      /* exercises */
+      if (!d.exercises.length) { $("todayExercises").innerHTML = '<div class="empty">' + esc(t("noEx")) + '</div>'; }
+      else {
+        $("todayExercises").innerHTML = d.exercises.map(function (e) {
+          return '<div class="entry"><div class="en"><b>' + esc(e.name) + '</b><small>' + e.minutes + ' ' + esc(t("minutes")) + '</small></div><span class="ek">+' + round(e.kcal) + ' kcal</span>' +
+            '<button class="del" data-delex="' + e.id + '" aria-label="' + esc(t("delete")) + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13"/></svg></button></div>';
+        }).join("");
+      }
+    }
+
+    function renderCatalog(filter) {
+      var q = (filter || "").trim().toLowerCase();
+      var list = CATALOG.filter(function (c) {
+        if (!q) return true;
+        return c[6].join(" ").toLowerCase().indexOf(q) >= 0 || c[0].indexOf(q) >= 0;
+      });
+      $("foodResults").innerHTML = list.map(function (c) {
+        return '<button class="food" data-cat="' + c[0] + '"><b>' + esc(catName(c)) + '</b><small>' + esc(t("per100")) + ' · P ' + c[2] + ' · C ' + c[3] + ' · F ' + c[4] + '</small><span class="fk">' + c[1] + ' kcal</span></button>';
+      }).join("") || '<div class="empty">' + esc(t("noResults")) + '</div>';
+    }
+
+    function renderExercises() {
+      $("exGrid").innerHTML = EXERCISES.map(function (ex, i) {
+        return '<div class="excard"><b>' + esc(ex[2][LANGIDX[state.lang]] || ex[2][0]) + '</b><small>MET ' + ex[1] + '</small>' +
+          '<div class="exrow"><input type="number" min="1" value="30" id="exmin-' + i + '" aria-label="' + esc(t("minutes")) + '" /><button data-ex="' + i + '">' + esc(t("add")) + '</button></div></div>';
+      }).join("");
+    }
+
+    function renderProgress() {
+      var keys = Object.keys(state.days).sort();
+      var logged = keys.filter(function (k) { return state.days[k].entries.length; });
+      $("statDays").textContent = logged.length;
+      var last30 = [], now = new Date();
+      for (var i = 29; i >= 0; i--) {
+        var dd = new Date(now); dd.setDate(now.getDate() - i);
+        var k = dateKey(dd), dv = state.days[k];
+        last30.push({ key: k, kcal: dv ? dv.entries.reduce(function (s, e) { return s + e.kcal; }, 0) : 0 });
+      }
+      var withFood = last30.filter(function (x) { return x.kcal > 0; });
+      $("statAvg").textContent = withFood.length ? round(withFood.reduce(function (s, x) { return s + x.kcal; }, 0) / withFood.length) : "–";
+      var lw = state.weights.length ? state.weights[state.weights.length - 1].kg : null;
+      $("statWeight").textContent = lw == null ? "–" : lw;
+      /* calorie bars */
+      var goal = state.profile ? computeGoal(state.profile).target : 0;
+      var max = Math.max(goal, Math.max.apply(null, last30.map(function (x) { return x.kcal; })), 100);
+      var W = 640, H = 190, base = 160, bw = W / 30;
+      var bars = "";
+      last30.forEach(function (x, i) {
+        var h = x.kcal / max * (base - 20);
+        bars += '<rect x="' + (i * bw + 3).toFixed(1) + '" y="' + (base - h).toFixed(1) + '" width="' + (bw - 6).toFixed(1) + '" height="' + h.toFixed(1) + '" rx="3" fill="' + (x.kcal ? "var(--brand)" : "var(--ring-track)") + '"><title>' + x.key + ": " + round(x.kcal) + " kcal</title></rect>";
+      });
+      var goalLine = goal ? '<line x1="0" x2="' + W + '" y1="' + (base - goal / max * (base - 20)).toFixed(1) + '" y2="' + (base - goal / max * (base - 20)).toFixed(1) + '" stroke="var(--accent)" stroke-width="2" stroke-dasharray="6 4"/>' : "";
+      $("calChart").innerHTML = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img">' + bars + goalLine + '<line x1="0" x2="' + W + '" y1="' + base + '" y2="' + base + '" stroke="var(--line)" stroke-width="1.5"/><text x="2" y="' + (H - 8) + '" font-size="12" fill="var(--muted)">30 ' + (state.lang === "de" ? "Tage" : state.lang === "ar" ? "يوم" : "days") + " · max " + round(max) + " kcal</text></svg>";
+      /* weight line */
+      var ws = state.weights.slice(-30);
+      if (ws.length < 2) { $("weightChart").innerHTML = '<div class="empty">' + esc(t("chart2Text")) + '</div>'; }
+      else {
+        var min = Math.min.apply(null, ws.map(function (w) { return w.kg; })), maxw = Math.max.apply(null, ws.map(function (w) { return w.kg; }));
+        if (maxw - min < 2) { var mid = (maxw + min) / 2; min = mid - 1; maxw = mid + 1; }
+        var pts = ws.map(function (w, i) {
+          var x = 30 + i * (W - 60) / (ws.length - 1);
+          var y = 20 + (maxw - w.kg) / (maxw - min) * 120;
+          return x.toFixed(1) + "," + y.toFixed(1);
+        }).join(" ");
+        $("weightChart").innerHTML = '<svg viewBox="0 0 ' + W + ' 170" role="img"><polyline points="' + pts + '" fill="none" stroke="var(--brand)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>' +
+          ws.map(function (w, i) { var xy = pts.split(" ")[i].split(","); return '<circle cx="' + xy[0] + '" cy="' + xy[1] + '" r="3.5" fill="var(--brand)"><title>' + w.date + ": " + w.kg + " kg</title></circle>"; }).join("") +
+          '<text x="2" y="16" font-size="12" fill="var(--muted)">' + maxw.toFixed(1) + ' kg</text><text x="2" y="152" font-size="12" fill="var(--muted)">' + min.toFixed(1) + ' kg</text></svg>';
+      }
+    }
+
+    function renderAll() { applyI18n(); renderToday(); renderCatalog($("searchInput").value); renderExercises(); renderProgress(); }
+
+    /* ================= views / nav ================= */
+    function showView(name) {
+      document.querySelectorAll(".view").forEach(function (v) { v.classList.toggle("on", v.id === "view-" + name); });
+      document.querySelectorAll("#tabs button").forEach(function (b) { b.classList.toggle("on", b.getAttribute("data-view") === name); });
+      if (name === "progress") renderProgress();
+      window.scrollTo({ top: 0 });
+    }
+    $("tabs").addEventListener("click", function (e) {
+      var b = e.target.closest("button[data-view]"); if (b) showView(b.getAttribute("data-view"));
+    });
+    $("nudgeBtn").addEventListener("click", function () { showView("goal"); });
+    $("prevDay").addEventListener("click", function () { viewDate.setDate(viewDate.getDate() - 1); renderToday(); });
+    $("nextDay").addEventListener("click", function () { viewDate.setDate(viewDate.getDate() + 1); renderToday(); });
+    $("todayBtn").addEventListener("click", function () { viewDate = new Date(); viewDate.setHours(0, 0, 0, 0); renderToday(); });
+    document.querySelector(".langseg").addEventListener("click", function (e) {
+      var b = e.target.closest("button[data-lang]"); if (!b) return;
+      state.lang = b.getAttribute("data-lang"); save(); renderAll(); fillAdvanced(); renderFasting();
+    });
+
+    /* meal segment */
+    function syncMealSeg() { document.querySelectorAll("#mealSeg button").forEach(function (b) { b.classList.toggle("on", b.getAttribute("data-meal") === currentMeal); }); }
+    $("mealSeg").addEventListener("click", function (e) {
+      var b = e.target.closest("button[data-meal]"); if (!b) return;
+      currentMeal = b.getAttribute("data-meal"); syncMealSeg();
+    });
+    syncMealSeg();
+
+    /* diary events (delegate) */
+    $("diary").addEventListener("click", function (e) {
+      var add = e.target.closest("[data-addmeal]");
+      if (add) { currentMeal = add.getAttribute("data-addmeal"); syncMealSeg(); showView("add"); return; }
+      var del = e.target.closest("[data-del]");
+      if (del) {
+        var d = day(); d.entries = d.entries.filter(function (x) { return String(x.id) !== del.getAttribute("data-del"); });
+        save(); renderToday();
+      }
+    });
+    $("todayExercises").addEventListener("click", function (e) {
+      var del = e.target.closest("[data-delex]");
+      if (del) {
+        var d = day(); d.exercises = d.exercises.filter(function (x) { return String(x.id) !== del.getAttribute("data-delex"); });
+        save(); renderToday();
+      }
+    });
+    $("waterPlus").addEventListener("click", function () { var d = day(); d.water = Math.min(5000, d.water + 250); save(); renderToday(); });
+    $("waterMinus").addEventListener("click", function () { var d = day(); d.water = Math.max(0, d.water - 250); save(); renderToday(); });
+
+    /* ================= adding food ================= */
+    function addEntry(name, per100, grams, thumb) {
+      var f = grams / 100;
+      day().entries.push({
+        id: Date.now() + Math.floor(Math.random() * 999),
+        meal: currentMeal, name: name, grams: grams,
+        kcal: per100.kcal * f, p: per100.p * f, c: per100.c * f, f: per100.f * f,
+        thumb: thumb || null
+      });
+      save(); renderToday(); toast(t("added"));
+    }
+    function openPortion(food) {
+      portionFood = food;
+      $("portionName").textContent = food.name;
+      $("portionInfo").textContent = food.kcal + " kcal · P " + food.p + " · C " + food.c + " · F " + food.f + " " + t("per100");
+      $("portionGrams").value = food.grams || 100;
+      updatePortion();
+      $("portionSheet").classList.add("on");
+    }
+    function updatePortion() {
+      if (!portionFood) return;
+      var g = Math.max(0, parseFloat($("portionGrams").value) || 0), f = g / 100;
+      $("portionKcal").textContent = round(portionFood.kcal * f);
+      $("portionMacros").textContent = "P " + round(portionFood.p * f) + " g · C " + round(portionFood.c * f) + " g · F " + round(portionFood.f * f) + " g";
+    }
+    $("portionGrams").addEventListener("input", updatePortion);
+    $("portionAdd").addEventListener("click", function () {
+      if (!portionFood) return;
+      addEntry(portionFood.name, portionFood, Math.max(1, parseFloat($("portionGrams").value) || 100), portionFood.thumb || null);
+      $("portionSheet").classList.remove("on");
+    });
+
+    $("foodResults").addEventListener("click", function (e) {
+      var b = e.target.closest("[data-cat],[data-usda]"); if (!b) return;
+      if (b.hasAttribute("data-cat")) {
+        var c = CATALOG.filter(function (x) { return x[0] === b.getAttribute("data-cat"); })[0];
+        if (c) openPortion({ name: catName(c), kcal: c[1], p: c[2], c: c[3], f: c[4], grams: c[5] });
+      } else {
+        var item = JSON.parse(b.getAttribute("data-usda"));
+        openPortion({ name: item.name, kcal: item.kcal, p: item.p, c: item.c, f: item.f, grams: 100 });
+      }
+    });
+
+    /* search: USDA live, catalog fallback */
+    var searchSeq = 0;
+    function doSearch() {
+      var q = $("searchInput").value.trim();
+      var seq = ++searchSeq;
+      renderCatalog(q);
+      if (!q) { $("searchStatus").textContent = ""; return; }
+      $("searchStatus").textContent = t("searching");
+      var url = "https://api.nal.usda.gov/fdc/v1/foods/search?api_key=DEMO_KEY&dataType=Foundation,SR%20Legacy&pageSize=12&query=" + encodeURIComponent(q);
+      fetch(url).then(function (r) { if (!r.ok) throw new Error("http"); return r.json(); }).then(function (data) {
+        if (seq !== searchSeq) return;
+        var foods = (data.foods || []).map(function (fd) {
+          function nut(id) { var n = (fd.foodNutrients || []).filter(function (x) { return x.nutrientId === id; })[0]; return n ? n.value : 0; }
+          return { name: fd.description, kcal: nut(1008) || nut(2047) || 0, p: nut(1003), c: nut(1005), f: nut(1004) };
+        }).filter(function (x) { return x.kcal > 0; });
+        if (!foods.length) { $("searchStatus").textContent = t("searchLocal"); return; }
+        $("searchStatus").textContent = "USDA FoodData Central";
+        $("foodResults").innerHTML = foods.map(function (x) {
+          var payload = esc(JSON.stringify(x));
+          return '<button class="food" data-usda="' + payload + '"><b>' + esc(x.name) + '</b><small>' + esc(t("per100")) + " · " + esc(t("sourceUsda")) + '</small><span class="fk">' + round(x.kcal) + ' kcal</span></button>';
+        }).join("") + $("foodResults").innerHTML;
+      }).catch(function () { if (seq === searchSeq) $("searchStatus").textContent = t("searchFail"); });
+    }
+    $("searchBtn").addEventListener("click", doSearch);
+    $("searchInput").addEventListener("keydown", function (e) { if (e.key === "Enter") doSearch(); });
+    var searchDeb;
+    $("searchInput").addEventListener("input", function () { clearTimeout(searchDeb); searchDeb = setTimeout(function () { renderCatalog($("searchInput").value); }, 180); });
+
+    /* quick add */
+    $("quickAdd").addEventListener("click", function () {
+      var name = $("qName").value.trim() || "Quick add";
+      var kcal = parseFloat($("qKcal").value) || 0;
+      if (kcal <= 0) { $("qKcal").focus(); return; }
+      day().entries.push({
+        id: Date.now(), meal: currentMeal, name: name, grams: 100,
+        kcal: kcal, p: parseFloat($("qP").value) || 0, c: parseFloat($("qC").value) || 0, f: parseFloat($("qF").value) || 0, thumb: null
+      });
+      save(); renderToday(); toast(t("added"));
+      $("qName").value = ""; $("qKcal").value = ""; $("qP").value = ""; $("qC").value = ""; $("qF").value = "";
+    });
+
+    /* ================= activity ================= */
+    $("exGrid").addEventListener("click", function (e) {
+      var b = e.target.closest("[data-ex]"); if (!b) return;
+      if (!state.profile) { toast(t("needProfile")); showView("goal"); return; }
+      var i = parseInt(b.getAttribute("data-ex"), 10), ex = EXERCISES[i];
+      var mins = Math.max(1, parseFloat($("exmin-" + i).value) || 30);
+      var kcal = ex[1] * state.profile.weight * (mins / 60);
+      day().exercises.push({ id: Date.now() + i, name: ex[2][LANGIDX[state.lang]] || ex[2][0], minutes: mins, kcal: kcal });
+      save(); renderToday(); toast(t("added"));
+    });
+
+    /* ================= weight / progress ================= */
+    $("wAdd").addEventListener("click", function () {
+      var v = parseFloat($("wInput").value);
+      if (!v || v < 20 || v > 400) { $("wInput").focus(); return; }
+      var k = dateKey(new Date());
+      state.weights = state.weights.filter(function (w) { return w.date !== k; });
+      state.weights.push({ date: k, kg: v });
+      state.weights.sort(function (a, b) { return a.date < b.date ? -1 : 1; });
+      if (state.profile) { state.profile.weight = v; fillGoalForm(); }
+      save(); renderProgress(); renderToday(); toast(t("weightSaved"));
+    });
+
+    /* ================= goal form ================= */
+    var formSel = { sex: "m", goal: "lose", rate: 0.5 };
+    function segWire(id, attr, key) {
+      $(id).addEventListener("click", function (e) {
+        var b = e.target.closest("button"); if (!b) return;
+        formSel[key] = attr === "rate" ? parseFloat(b.getAttribute("data-" + attr)) : b.getAttribute("data-" + attr);
+        syncSegs();
+        if (key === "goal") $("rateField").style.display = formSel.goal === "keep" ? "none" : "";
+      });
+    }
+    function syncSegs() {
+      document.querySelectorAll("#sexSeg button").forEach(function (b) { b.classList.toggle("on", b.getAttribute("data-sex") === formSel.sex); });
+      document.querySelectorAll("#goalSeg button").forEach(function (b) { b.classList.toggle("on", b.getAttribute("data-goal") === formSel.goal); });
+      document.querySelectorAll("#rateSeg button").forEach(function (b) { b.classList.toggle("on", parseFloat(b.getAttribute("data-rate")) === formSel.rate); });
+    }
+    segWire("sexSeg", "sex", "sex"); segWire("goalSeg", "goal", "goal"); segWire("rateSeg", "rate", "rate");
+    function fillGoalForm() {
+      var p = state.profile; if (!p) { syncSegs(); fillAdvanced(); return; }
+      formSel = { sex: p.sex, goal: p.goal, rate: p.rate };
+      $("inAge").value = p.age; $("inWeight").value = p.weight; $("inHeight").value = p.height; $("inActivity").value = String(p.activity);
+      $("rateField").style.display = p.goal === "keep" ? "none" : "";
+      syncSegs(); fillAdvanced(); showGoalResult();
+    }
+    function showGoalResult() {
+      var p = state.profile; if (!p) return;
+      var g = computeGoal(p);
+      if (p.macroGrams) { g.carbs = p.macroGrams.c; g.protein = p.macroGrams.p; g.fat = p.macroGrams.f; }
+      $("goalResult").classList.remove("hidden");
+      $("resKcal").textContent = g.target;
+      var adjTxt = g.adj === 0 ? t("adjZero") : g.adj < 0 ? fmt("adjMinus", { n: Math.abs(g.adj) }) : fmt("adjPlus", { n: g.adj });
+      var detail = fmt("resDetail", { bmr: g.bmr, act: "×" + p.activity, adj: adjTxt, c: g.carbs, p: g.protein, f: g.fat });
+      if (g.floored) detail += fmt("floorNote", { n: g.floor });
+      $("resDetail").textContent = detail;
+    }
+    $("calcBtn").addEventListener("click", function () {
+      var age = parseInt($("inAge").value, 10), w = parseFloat($("inWeight").value), h = parseFloat($("inHeight").value);
+      if (!age || age < 10 || age > 100) { $("inAge").focus(); return; }
+      if (!w || w < 25 || w > 400) { $("inWeight").focus(); return; }
+      if (!h || h < 100 || h > 250) { $("inHeight").focus(); return; }
+      state.profile = { sex: formSel.sex, age: age, weight: w, height: h, activity: parseFloat($("inActivity").value), goal: formSel.goal, rate: formSel.rate };
+      save(); fillAdvanced(); showGoalResult(); renderToday(); toast(t("goalSaved"));
+    });
+
+    /* ================= sheets ================= */
+    document.querySelectorAll("[data-close]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        $(b.getAttribute("data-close")).classList.remove("on");
+        if (b.getAttribute("data-close") === "scanSheet") stopScanner();
+      });
+    });
+    document.querySelectorAll(".overlay").forEach(function (ov) {
+      ov.addEventListener("click", function (e) { if (e.target === ov) { ov.classList.remove("on"); stopScanner(); } });
+    });
+
+    /* ================= barcode (html5-qrcode + Open Food Facts) ================= */
+    var h5q = null, scannerLoading = null;
+    function loadScript(src) {
+      return new Promise(function (res, rej) {
+        var s = document.createElement("script"); s.src = src; s.onload = res; s.onerror = rej;
+        document.head.appendChild(s);
+      });
+    }
+    function stopScanner() {
+      if (h5q) { try { h5q.stop().catch(function () {}); } catch (e) {} h5q = null; }
+    }
+    $("openScan").addEventListener("click", function () {
+      $("scanSheet").classList.add("on");
+      $("scanStatus").textContent = t("scanStart");
+      $("scanResult").innerHTML = "";
+      if (window.Html5Qrcode) { startScanner(); return; }
+      if (!scannerLoading) scannerLoading = loadScript("https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js");
+      scannerLoading.then(startScanner).catch(function () { $("scanStatus").textContent = t("scanFail"); });
+    });
+    function startScanner() {
+      if (h5q) return;
+      try {
+        h5q = new Html5Qrcode("scanner");
+        h5q.start({ facingMode: "environment" }, { fps: 10, qrbox: { width: 250, height: 150 } },
+          function (code) { stopScanner(); lookupBarcode(code); },
+          function () {}
+        ).then(function () { $("scanStatus").textContent = ""; }).catch(function () { $("scanStatus").textContent = t("scanFail"); h5q = null; });
+      } catch (e) { $("scanStatus").textContent = t("scanFail"); }
+    }
+    $("codeBtn").addEventListener("click", function () {
+      var code = $("codeInput").value.replace(/\D/g, "");
+      if (code) lookupBarcode(code);
+    });
+    function lookupBarcode(code) {
+      $("scanStatus").textContent = t("looking");
+      fetch("https://world.openfoodfacts.org/api/v2/product/" + encodeURIComponent(code) + ".json")
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          $("scanStatus").textContent = "";
+          if (!data || data.status !== 1 || !data.product) { $("scanResult").innerHTML = '<div class="empty">' + esc(t("notFound")) + '</div>'; return; }
+          var p = data.product, n = p.nutriments || {};
+          var kcal = n["energy-kcal_100g"];
+          if (kcal == null && n["energy_100g"] != null) kcal = n["energy_100g"] / 4.184;
+          if (kcal == null) { $("scanResult").innerHTML = '<div class="empty">' + esc(t("foundNoNutri")) + '</div>'; return; }
+          var food = {
+            name: p.product_name || p.generic_name || code,
+            kcal: Math.round(kcal * 10) / 10,
+            p: n.proteins_100g || 0, c: n.carbohydrates_100g || 0, f: n.fat_100g || 0,
+            grams: p.product_quantity ? Math.round(parseFloat(p.product_quantity)) || 100 : 100
+          };
+          $("scanResult").innerHTML = '<div class="detect"><div class="dn"><b>' + esc(food.name) + '</b><small>' + esc(t("sourceOff")) + " · " + code + '</small></div></div>';
+          openPortion(food);
+        })
+        .catch(function () { $("scanStatus").textContent = ""; $("scanResult").innerHTML = '<div class="empty">' + esc(t("notFound")) + '</div>'; });
+    }
+
+    /* ================= photo meal recognition (on-device MobileNet) ================= */
+    var netModel = null, netLoading = null;
+    $("openPhoto").addEventListener("click", function () {
+      $("photoSheet").classList.add("on");
+      var sel = $("manualFood");
+      if (!sel.options.length) {
+        sel.innerHTML = CATALOG.map(function (c) { return '<option value="' + c[0] + '">' + esc(catName(c)) + '</option>'; }).join("");
+      } else {
+        /* refresh names in current language */
+        sel.innerHTML = CATALOG.map(function (c) { return '<option value="' + c[0] + '">' + esc(catName(c)) + '</option>'; }).join("");
+      }
+    });
+    $("takePhoto").addEventListener("click", function () { $("photoInput").click(); });
+    $("photoInput").addEventListener("change", function () {
+      var file = $("photoInput").files && $("photoInput").files[0];
+      if (!file) return;
+      var img = $("photoPreview");
+      img.src = URL.createObjectURL(file);
+      img.classList.remove("hidden");
+      $("recognizeBtn").classList.remove("hidden");
+      $("photoManual").classList.remove("hidden");
+      $("photoResults").innerHTML = "";
+      $("photoStatus").textContent = "";
+      /* small thumbnail for diary entries added from this photo */
+      var c = document.createElement("canvas");
+      img.onload = function () {
+        var scale = Math.min(1, 160 / img.naturalWidth);
+        c.width = Math.round(img.naturalWidth * scale); c.height = Math.round(img.naturalHeight * scale);
+        c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+        try { photoThumb = c.toDataURL("image/jpeg", 0.7); } catch (e) { photoThumb = null; }
+      };
+    });
+    function loadNet() {
+      if (netModel) return Promise.resolve(netModel);
+      if (!netLoading) {
+        netLoading = loadScript("https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.20.0/dist/tf.min.js")
+          .then(function () { return loadScript("https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.1/dist/mobilenet.min.js"); })
+          .then(function () { return mobilenet.load({ version: 2, alpha: 1.0 }); })
+          .then(function (m) { netModel = m; return m; });
+      }
+      return netLoading;
+    }
+    $("recognizeBtn").addEventListener("click", function () {
+      var img = $("photoPreview");
+      $("photoStatus").innerHTML = '<div class="spinner"></div>' + esc(t("recognLoading"));
+      loadNet().then(function (model) {
+        $("photoStatus").textContent = t("recognRun");
+        return model.classify(img, 8);
+      }).then(function (preds) {
+        var found = [], seen = {};
+        (preds || []).forEach(function (pr) {
+          pr.className.split(",").map(function (s) { return s.trim().toLowerCase(); }).forEach(function (cls) {
+            var cat = CLASS2CAT[cls];
+            if (cat && !seen[cat[0]]) { seen[cat[0]] = 1; found.push({ cat: cat, prob: pr.probability }); }
+          });
+        });
+        /* also accept weak matches from the top prediction list */
+        if (!found.length) {
+          $("photoStatus").textContent = t("recognNone");
+          $("photoResults").innerHTML = "";
+          return;
+        }
+        $("photoStatus").textContent = t("recognSome");
+        $("photoResults").innerHTML = found.slice(0, 4).map(function (f2, i) {
+          var c = f2.cat;
+          return '<div class="detect"><div class="dn"><b>' + esc(catName(c)) + '</b><small>' + c[1] + " kcal / 100 g · " + Math.round(f2.prob * 100) + "% " + esc(t("conf")) + '</small></div>' +
+            '<input type="number" min="1" value="' + c[5] + '" id="det-g-' + i + '" aria-label="g" /><span>g</span>' +
+            '<button data-det="' + c[0] + '" data-detg="det-g-' + i + '">' + esc(t("addBtn")) + '</button></div>';
+        }).join("");
+      }).catch(function () {
+        $("photoStatus").textContent = t("recognFail");
+      });
+    });
+    $("photoResults").addEventListener("click", function (e) {
+      var b = e.target.closest("[data-det]"); if (!b) return;
+      var c = CATALOG.filter(function (x) { return x[0] === b.getAttribute("data-det"); })[0];
+      if (!c) return;
+      var g = Math.max(1, parseFloat($(b.getAttribute("data-detg")).value) || c[5]);
+      addEntry(catName(c), { kcal: c[1], p: c[2], c: c[3], f: c[4] }, g, photoThumb);
+      b.disabled = true; b.textContent = "✓";
+    });
+    $("manualAdd").addEventListener("click", function () {
+      var c = CATALOG.filter(function (x) { return x[0] === $("manualFood").value; })[0];
+      if (!c) return;
+      var g = Math.max(1, parseFloat($("manualGrams").value) || c[5]);
+      addEntry(catName(c), { kcal: c[1], p: c[2], c: c[3], f: c[4] }, g, photoThumb);
+    });
+
+    /* ================= premium: gram macros, per-weekday & per-meal goals ================= */
+    function fillAdvanced() {
+      var p = state.profile;
+      var g = p ? computeGoal(p) : null;
+      var mg = p && p.macroGrams ? p.macroGrams : null;
+      $("mgP").value = mg ? mg.p : g ? g.protein : "";
+      $("mgC").value = mg ? mg.c : g ? g.carbs : "";
+      $("mgF").value = mg ? mg.f : g ? g.fat : "";
+      updateMgInfo();
+      var locale = state.lang === "ar" ? "ar-MA" : state.lang === "de" ? "de-DE" : "en-GB";
+      var order = [1, 2, 3, 4, 5, 6, 0]; /* Monday first; values are JS getDay() */
+      $("dayGoalRows").innerHTML = order.map(function (wd) {
+        var dref = new Date(2024, 0, 1 + (wd + 6) % 7);
+        var name = dref.toLocaleDateString(locale, { weekday: "long" });
+        var val = p && p.dayGoals && p.dayGoals[wd] ? p.dayGoals[wd] : g ? g.target : "";
+        return '<div class="dayrow"><label for="dg-' + wd + '">' + esc(name) + '</label><input id="dg-' + wd + '" type="number" min="0" inputmode="numeric" value="' + val + '" /><span>kcal</span></div>';
+      }).join("");
+      var mp = p && p.mealPcts ? p.mealPcts : { breakfast: 25, lunch: 35, dinner: 30, snack: 10 };
+      MEALS.forEach(function (m) { $("mp-" + m).value = mp[m] != null ? mp[m] : ""; });
+      updateMpSum();
+    }
+    function updateMgInfo() {
+      var P = parseFloat($("mgP").value) || 0, C = parseFloat($("mgC").value) || 0, F = parseFloat($("mgF").value) || 0;
+      $("mgInfo").textContent = t("protein") + " " + P + " g · " + t("carbs") + " " + C + " g · " + t("fat") + " " + F + " g = " + Math.round(P * 4 + C * 4 + F * 9) + " kcal";
+    }
+    ["mgP", "mgC", "mgF"].forEach(function (id) { $(id).addEventListener("input", updateMgInfo); });
+    function needProfileGuard() { if (!state.profile) { toast(t("needProfile")); showView("goal"); return true; } return false; }
+    $("mgSave").addEventListener("click", function () {
+      if (needProfileGuard()) return;
+      state.profile.macroGrams = {
+        p: Math.max(0, parseFloat($("mgP").value) || 0),
+        c: Math.max(0, parseFloat($("mgC").value) || 0),
+        f: Math.max(0, parseFloat($("mgF").value) || 0)
+      };
+      save(); showGoalResult(); renderToday(); toast(t("savedOk"));
+    });
+    $("mgClear").addEventListener("click", function () {
+      if (!state.profile) return;
+      delete state.profile.macroGrams; save(); fillAdvanced(); showGoalResult(); renderToday(); toast(t("savedOk"));
+    });
+    $("dgSave").addEventListener("click", function () {
+      if (needProfileGuard()) return;
+      var map = {}, any = false;
+      [0, 1, 2, 3, 4, 5, 6].forEach(function (wd) {
+        var v = parseInt($("dg-" + wd).value, 10);
+        if (v > 0) { map[wd] = v; any = true; }
+      });
+      if (any) state.profile.dayGoals = map; else delete state.profile.dayGoals;
+      save(); renderToday(); toast(t("savedOk"));
+    });
+    $("dgClear").addEventListener("click", function () {
+      if (!state.profile) return;
+      delete state.profile.dayGoals; save(); fillAdvanced(); renderToday(); toast(t("savedOk"));
+    });
+    function updateMpSum() {
+      var s = 0;
+      MEALS.forEach(function (m) { s += parseFloat($("mp-" + m).value) || 0; });
+      $("mpSum").textContent = fmt("pctSum", { n: Math.round(s) });
+    }
+    MEALS.forEach(function (m) { $("mp-" + m).addEventListener("input", updateMpSum); });
+    $("mpSave").addEventListener("click", function () {
+      if (needProfileGuard()) return;
+      var mp = {};
+      MEALS.forEach(function (m) { mp[m] = Math.max(0, parseFloat($("mp-" + m).value) || 0); });
+      state.profile.mealPcts = mp; save(); renderToday(); toast(t("savedOk"));
+    });
+    $("mpClear").addEventListener("click", function () {
+      if (!state.profile) return;
+      delete state.profile.mealPcts; save(); fillAdvanced(); renderToday(); toast(t("savedOk"));
+    });
+
+    /* ================= export (CSV / Excel) ================= */
+    function collectRows() {
+      var rows = [["Date", "Type", "Meal", "Name", "Amount", "kcal", "Protein g", "Carbs g", "Fat g"]];
+      Object.keys(state.days).sort().forEach(function (k) {
+        var d = state.days[k];
+        d.entries.forEach(function (e) { rows.push([k, "Food", e.meal, e.name, e.grams + " g", round(e.kcal), round(e.p), round(e.c), round(e.f)]); });
+        d.exercises.forEach(function (e) { rows.push([k, "Activity", "", e.name, e.minutes + " min", round(e.kcal), "", "", ""]); });
+        if (d.water) rows.push([k, "Water", "", "", d.water + " ml", "", "", "", ""]);
+      });
+      state.weights.forEach(function (w) { rows.push([w.date, "Weight", "", "", w.kg + " kg", "", "", "", ""]); });
+      return rows;
+    }
+    function downloadFile(name, content, mime) {
+      var blob = new Blob([content], { type: mime });
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(blob); a.download = name;
+      document.body.appendChild(a); a.click();
+      setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 400);
+    }
+    function csvCell(v) { v = String(v == null ? "" : v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }
+    $("expCsv").addEventListener("click", function () {
+      var csv = collectRows().map(function (r) { return r.map(csvCell).join(","); }).join("\r\n");
+      downloadFile("saveyourlife-export.csv", "\ufeff" + csv, "text/csv;charset=utf-8");
+      toast(t("exported"));
+    });
+    $("expXls").addEventListener("click", function () {
+      var rows = collectRows();
+      var html = '<html xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="utf-8"></head><body><table border="1">' +
+        rows.map(function (r, i) {
+          var tag = i === 0 ? "th" : "td";
+          return "<tr>" + r.map(function (c) { return "<" + tag + ">" + esc(c) + "</" + tag + ">"; }).join("") + "</tr>";
+        }).join("") + "</table></body></html>";
+      downloadFile("saveyourlife-export.xls", html, "application/vnd.ms-excel");
+      toast(t("exported"));
+    });
+
+    /* ================= intermittent fasting timer ================= */
+    var fastSel = 16;
+    $("fastSeg").addEventListener("click", function (e) {
+      var b = e.target.closest("button[data-fast]"); if (!b) return;
+      fastSel = parseInt(b.getAttribute("data-fast"), 10);
+      document.querySelectorAll("#fastSeg button").forEach(function (x) { x.classList.toggle("on", x === b); });
+    });
+    $("fastStart").addEventListener("click", function () {
+      state.fasting = { start: Date.now(), hours: fastSel };
+      save(); renderFasting();
+    });
+    $("fastStop").addEventListener("click", function () {
+      state.fasting = null; save(); renderFasting(); toast(t("savedOk"));
+    });
+    function fmtClock(ms) {
+      var s = Math.max(0, Math.floor(ms / 1000));
+      function p2(n) { return String(n).padStart(2, "0"); }
+      return p2(Math.floor(s / 3600)) + ":" + p2(Math.floor(s % 3600 / 60)) + ":" + p2(s % 60);
+    }
+    function renderFasting() {
+      var f = state.fasting;
+      $("fastIdle").classList.toggle("hidden", !!f);
+      $("fastActive").classList.toggle("hidden", !f);
+      if (f) tickFasting();
+    }
+    function tickFasting() {
+      var f = state.fasting; if (!f) return;
+      var total = f.hours * 3600 * 1000, elapsed = Date.now() - f.start, left = total - elapsed;
+      var locale = state.lang === "ar" ? "ar-MA" : state.lang === "de" ? "de-DE" : "en-GB";
+      if (left <= 0) {
+        $("fastClock").textContent = "00:00:00";
+        $("fastBar").style.width = "100%";
+        $("fastState").textContent = t("fastDone");
+      } else {
+        $("fastClock").textContent = fmtClock(left);
+        $("fastBar").style.width = Math.min(100, elapsed / total * 100) + "%";
+        $("fastState").textContent = f.hours + " h · " + t("fastEnds") + " " + new Date(f.start + total).toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" }) + " · " + fmtClock(elapsed) + " " + t("fastElapsed");
+      }
+    }
+    setInterval(tickFasting, 1000);
+
+    /* ================= voice logging ================= */
+    $("voiceBtn").addEventListener("click", function () {
+      var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SR) { toast(t("voiceNo")); return; }
+      var rec = new SR();
+      rec.lang = state.lang === "ar" ? "ar-MA" : state.lang === "de" ? "de-DE" : "en-US";
+      rec.interimResults = false;
+      toast(t("voiceListening"));
+      rec.onresult = function (ev) {
+        var text = (ev.results[0] && ev.results[0][0] && ev.results[0][0].transcript) || "";
+        var m = text.match(/(\d+)\s*(?:g|gram|grams|gramm|غرام|غ)?\s*(?:of|من)?\s+(.+)/i);
+        if (m) {
+          var grams = parseInt(m[1], 10), q = m[2].trim().toLowerCase();
+          var cat = CATALOG.filter(function (c) {
+            return c[6].join(" ").toLowerCase().indexOf(q) >= 0 || (c[6][LANGIDX[state.lang]] && q.indexOf(c[6][LANGIDX[state.lang]].toLowerCase()) >= 0);
+          })[0];
+          if (cat) { openPortion({ name: catName(cat), kcal: cat[1], p: cat[2], c: cat[3], f: cat[4], grams: grams }); return; }
+          $("searchInput").value = m[2].trim();
+        } else {
+          $("searchInput").value = text;
+        }
+        doSearch();
+      };
+      rec.onerror = function () { toast(t("voiceNo")); };
+      try { rec.start(); } catch (e) { toast(t("voiceNo")); }
+    });
+
+    /* ================= init ================= */
+    fillGoalForm();
+    renderAll();
+    renderFasting();
+    </script>
+  </body>
+</html>
