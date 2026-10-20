@@ -351,6 +351,28 @@
       @media (min-width: 860px) { .toast { bottom: 28px; } }
       .toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
       .hidden { display: none !important; }
+    
+      /* ---------- body atlas ---------- */
+      .atlas-facts { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0 4px; }
+      .atlas-chip { background: var(--brand-soft); color: var(--brand); border-radius: 999px; padding: 5px 12px; font-size: 12px; font-weight: 700; }
+      .atlas-layerseg { display: flex; gap: 6px; margin: 14px 0 8px; }
+      .atlas-layerseg button { flex: 1; border: 1px solid var(--line); background: var(--surface); color: var(--muted); border-radius: 12px; padding: 9px 4px; font-weight: 700; font-size: 13px; cursor: pointer; font-family: inherit; }
+      .atlas-layerseg button.on { background: var(--brand); border-color: var(--brand); color: #fff; }
+      #atlasRange { width: 100%; accent-color: var(--brand); }
+      .atlas-fliprow { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+      .atlas-flipbtn { border: 1px solid var(--line); background: var(--surface); color: var(--brand); border-radius: 12px; padding: 8px 14px; font-weight: 700; cursor: pointer; font-family: inherit; }
+      .atlas-stage { perspective: 1100px; margin-top: 12px; }
+      .atlas-flip { position: relative; width: min(270px, 76vw); margin: 0 auto; aspect-ratio: 220 / 520; transform-style: preserve-3d; transition: transform .7s ease; }
+      .atlas-flip.flipped { transform: rotateY(180deg); }
+      .atlas-face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+      .atlas-face svg { width: 100%; height: 100%; display: block; }
+      .atlas-back { transform: rotateY(180deg); }
+      .atlas-face g.layer { transition: opacity .45s ease; }
+      .atlas-face .hs { cursor: pointer; }
+      .hs-halo { fill: var(--brand); opacity: .35; transform-box: fill-box; transform-origin: center; animation: atlasPulse 1.6s ease-out infinite; }
+      @keyframes atlasPulse { 0% { transform: scale(.55); opacity: .55; } 70% { transform: scale(1.6); opacity: 0; } 100% { transform: scale(1.6); opacity: 0; } }
+      .hs-dot { fill: var(--brand); stroke: #fff; stroke-width: 2; }
+      .hs.sel .hs-dot { fill: #ffb020; }
     </style>
   </head>
   <body>
@@ -395,6 +417,10 @@
         <button data-view="goal">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="0.5" fill="currentColor"/></svg>
           <span data-i18n="tabGoal">My goal</span>
+        </button>
+        <button data-view="atlas">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2.4"/><path d="M12 8v5M12 13l-3 7M12 13l3 7M7 10.5l5-1.5 5 1.5"/></svg>
+          <span data-i18n="tabAtlas">Body Atlas</span>
         </button>
       </nav>
 
@@ -675,6 +701,39 @@
             </div>
           </div>
         </section>
+      
+        <!-- ============ BODY ATLAS ============ -->
+        <section class="view" id="view-atlas">
+          <div class="card">
+            <h2 data-i18n="atlasTitle">3D Body Atlas</h2>
+            <p class="sub" data-i18n="atlasSub">Explore the human body layer by layer.</p>
+            <div class="atlas-facts">
+              <span class="atlas-chip" data-i18n="atlasFactBones">206 bones</span>
+              <span class="atlas-chip" data-i18n="atlasFactMuscles">600+ muscles</span>
+              <span class="atlas-chip" data-i18n="atlasFactSkin">Skin: largest organ</span>
+            </div>
+            <div class="atlas-layerseg" id="atlasSeg">
+              <button data-layer="0" class="on" data-i18n="atlasSkeleton">Skeleton</button>
+              <button data-layer="1" data-i18n="atlasMuscles">Muscles</button>
+              <button data-layer="2" data-i18n="atlasOrgans">Organs</button>
+            </div>
+            <input type="range" id="atlasRange" min="0" max="2" step="0.01" value="0" aria-label="Layer slider" />
+            <div class="atlas-fliprow">
+              <button id="atlasFlip" class="atlas-flipbtn">🔄 <span data-i18n="atlasFlip">Flip view</span></button>
+              <span class="sub" data-i18n="atlasTap">Tap a glowing dot on the body</span>
+            </div>
+            <div class="atlas-stage" id="atlasStage">
+              <div class="atlas-flip" id="atlasFlipInner">
+                <div class="atlas-face atlas-front"><svg viewBox="0 0 220 520" role="img" aria-label="Human body front"><g fill="rgba(140,140,140,.14)" stroke="#9aa0a6" stroke-width="1.2"><circle cx="110" cy="34" r="23"/><rect x="100" y="50" width="20" height="16" rx="6"/><path d="M74 72 Q110 58 146 72 L150 148 Q153 198 144 216 L76 216 Q67 198 70 148 Z"/><rect x="45" y="70" width="17" height="130" rx="8" transform="rotate(5 53 70)"/><rect x="158" y="70" width="17" height="130" rx="8" transform="rotate(-5 167 70)"/><rect x="81" y="208" width="25" height="298" rx="11"/><rect x="114" y="208" width="25" height="298" rx="11"/></g><g class="layer" data-layer="0" fill="#eae3d1" stroke="#a08c62" stroke-width="1.4"><circle cx="110" cy="32" r="20"/><rect x="99" y="45" width="22" height="11" rx="5"/><circle cx="102" cy="32" r="3.5" fill="#a08c62" stroke="none"/><circle cx="118" cy="32" r="3.5" fill="#a08c62" stroke="none"/><rect x="105" y="64" width="10" height="9" rx="2"/><rect x="105" y="76" width="10" height="9" rx="2"/><rect x="105" y="88" width="10" height="9" rx="2"/><rect x="105" y="100" width="10" height="9" rx="2"/><rect x="105" y="112" width="10" height="9" rx="2"/><rect x="105" y="124" width="10" height="9" rx="2"/><rect x="105" y="136" width="10" height="9" rx="2"/><rect x="105" y="148" width="10" height="9" rx="2"/><rect x="105" y="160" width="10" height="9" rx="2"/><g fill="none" stroke-width="4"><path d="M80 92 Q110 106 140 92"/><path d="M76 108 Q110 124 144 108"/><path d="M76 124 Q110 140 144 124"/><path d="M80 140 Q110 154 140 140"/></g><g fill="none" stroke-width="4"><path d="M94 66 L78 72"/><path d="M126 66 L142 72"/></g><path d="M80 184 Q110 170 140 184 Q147 205 128 214 L92 214 Q73 205 80 184 Z"/><g fill="none" stroke-width="5" stroke-linecap="round"><path d="M66 84 L56 138"/><path d="M56 138 L50 192"/><path d="M50 192 L48 207"/><path d="M154 84 L164 138"/><path d="M164 138 L170 192"/><path d="M170 192 L172 207"/></g><g fill="none" stroke-width="6" stroke-linecap="round"><path d="M94 224 L92 330"/><path d="M92 346 L93 466"/><path d="M93 470 L105 474"/><path d="M126 224 L128 330"/><path d="M128 346 L127 466"/><path d="M127 470 L115 474"/></g><circle cx="92" cy="338" r="5.5"/><circle cx="128" cy="338" r="5.5"/><g class="hs" data-part="skull"><circle class="hs-halo" cx="110" cy="30" r="10"/><circle class="hs-dot" cx="110" cy="30" r="6.5"/></g><g class="hs" data-part="ribs"><circle class="hs-halo" cx="140" cy="116" r="10"/><circle class="hs-dot" cx="140" cy="116" r="6.5"/></g><g class="hs" data-part="spine"><circle class="hs-halo" cx="110" cy="160" r="10"/><circle class="hs-dot" cx="110" cy="160" r="6.5"/></g><g class="hs" data-part="pelvis"><circle class="hs-halo" cx="110" cy="200" r="10"/><circle class="hs-dot" cx="110" cy="200" r="6.5"/></g><g class="hs" data-part="femur"><circle class="hs-halo" cx="93" cy="285" r="10"/><circle class="hs-dot" cx="93" cy="285" r="6.5"/></g></g><g class="layer" data-layer="1" fill="#cf4b47" stroke="#9e2f2b" stroke-width="1.2"><path d="M92 56 L128 56 L143 78 L77 78 Z" fill="#e0685f"/><ellipse cx="89" cy="98" rx="19" ry="12"/><ellipse cx="131" cy="98" rx="19" ry="12"/><circle cx="63" cy="82" r="11"/><circle cx="157" cy="82" r="11"/><ellipse cx="55" cy="118" rx="8" ry="21"/><ellipse cx="165" cy="118" rx="8" ry="21"/><ellipse cx="51" cy="168" rx="7" ry="19"/><ellipse cx="169" cy="168" rx="7" ry="19"/><rect x="96" y="118" width="28" height="52" rx="9"/><path d="M96 135 H124 M96 152 H124 M110 118 V170" stroke="#9e2f2b" fill="none"/><ellipse cx="93" cy="262" rx="14" ry="46"/><ellipse cx="127" cy="262" rx="14" ry="46"/><ellipse cx="94" cy="408" rx="8" ry="32" fill="#e0685f"/><ellipse cx="126" cy="408" rx="8" ry="32" fill="#e0685f"/><g class="hs" data-part="pecs"><circle class="hs-halo" cx="89" cy="98" r="10"/><circle class="hs-dot" cx="89" cy="98" r="6.5"/></g><g class="hs" data-part="biceps"><circle class="hs-halo" cx="55" cy="118" r="10"/><circle class="hs-dot" cx="55" cy="118" r="6.5"/></g><g class="hs" data-part="abs"><circle class="hs-halo" cx="110" cy="144" r="10"/><circle class="hs-dot" cx="110" cy="144" r="6.5"/></g><g class="hs" data-part="quads"><circle class="hs-halo" cx="93" cy="262" r="10"/><circle class="hs-dot" cx="93" cy="262" r="6.5"/></g></g><g class="layer" data-layer="2"><ellipse cx="110" cy="28" rx="15" ry="11" fill="#eda9c6" stroke="#c4749c" stroke-width="1.4"/><path d="M100 24 Q105 20 110 24 Q115 28 120 24 M100 32 Q105 36 110 32" fill="none" stroke="#c4749c" stroke-width="1.2"/><path d="M104 84 Q78 82 75 110 Q73 140 88 149 Q103 153 104 136 Z" fill="#8fc1ec" stroke="#5b8ec4" stroke-width="1.4"/><path d="M116 84 Q142 82 145 110 Q147 140 132 149 Q117 153 116 136 Z" fill="#8fc1ec" stroke="#5b8ec4" stroke-width="1.4"/><path d="M110 134 C93 117 89 104 99 96 C106 91 110 97 110 103 C110 97 114 91 121 96 C131 104 127 117 110 134 Z" fill="#e63946" stroke="#b31e2c" stroke-width="1.4"/><ellipse cx="88" cy="158" rx="22" ry="9" fill="#b06a35" stroke="#8a4f24" stroke-width="1.4"/><ellipse cx="128" cy="160" rx="12" ry="9" fill="#f2b880" stroke="#cf8a4a" stroke-width="1.4"/><rect x="88" y="178" width="44" height="38" rx="12" fill="#eec27f" stroke="#c79a4e" stroke-width="1.4"/><path d="M94 190 Q103 184 112 190 Q121 196 130 190 M94 202 Q103 208 112 202 Q121 196 130 202" fill="none" stroke="#c79a4e" stroke-width="1.4"/><g class="hs" data-part="brain"><circle class="hs-halo" cx="110" cy="28" r="10"/><circle class="hs-dot" cx="110" cy="28" r="6.5"/></g><g class="hs" data-part="heart"><circle class="hs-halo" cx="110" cy="112" r="10"/><circle class="hs-dot" cx="110" cy="112" r="6.5"/></g><g class="hs" data-part="lungs"><circle class="hs-halo" cx="134" cy="116" r="10"/><circle class="hs-dot" cx="134" cy="116" r="6.5"/></g><g class="hs" data-part="liver"><circle class="hs-halo" cx="88" cy="158" r="10"/><circle class="hs-dot" cx="88" cy="158" r="6.5"/></g><g class="hs" data-part="stomach"><circle class="hs-halo" cx="128" cy="160" r="10"/><circle class="hs-dot" cx="128" cy="160" r="6.5"/></g><g class="hs" data-part="intestines"><circle class="hs-halo" cx="110" cy="197" r="10"/><circle class="hs-dot" cx="110" cy="197" r="6.5"/></g></g></svg></div>
+                <div class="atlas-face atlas-back"><svg viewBox="0 0 220 520" role="img" aria-label="Human body back"><g fill="rgba(140,140,140,.14)" stroke="#9aa0a6" stroke-width="1.2"><circle cx="110" cy="34" r="23"/><rect x="100" y="50" width="20" height="16" rx="6"/><path d="M74 72 Q110 58 146 72 L150 148 Q153 198 144 216 L76 216 Q67 198 70 148 Z"/><rect x="45" y="70" width="17" height="130" rx="8" transform="rotate(5 53 70)"/><rect x="158" y="70" width="17" height="130" rx="8" transform="rotate(-5 167 70)"/><rect x="81" y="208" width="25" height="298" rx="11"/><rect x="114" y="208" width="25" height="298" rx="11"/></g><g class="layer" data-layer="0" fill="#eae3d1" stroke="#a08c62" stroke-width="1.4"><circle cx="110" cy="32" r="20"/><rect x="99" y="45" width="22" height="11" rx="5"/><rect x="104" y="62" width="12" height="10" rx="2"/><rect x="104" y="76" width="12" height="10" rx="2"/><rect x="104" y="90" width="12" height="10" rx="2"/><rect x="104" y="104" width="12" height="10" rx="2"/><rect x="104" y="118" width="12" height="10" rx="2"/><rect x="104" y="132" width="12" height="10" rx="2"/><rect x="104" y="146" width="12" height="10" rx="2"/><rect x="104" y="160" width="12" height="10" rx="2"/><rect x="104" y="174" width="12" height="10" rx="2"/><path d="M76 82 L100 90 L80 114 Z"/><path d="M144 82 L120 90 L140 114 Z"/><g fill="none" stroke-width="4"><path d="M80 92 Q110 106 140 92"/><path d="M76 108 Q110 124 144 108"/><path d="M76 124 Q110 140 144 124"/><path d="M80 140 Q110 154 140 140"/></g><path d="M80 184 Q110 170 140 184 Q147 205 128 214 L92 214 Q73 205 80 184 Z"/><g fill="none" stroke-width="5" stroke-linecap="round"><path d="M66 84 L56 138"/><path d="M56 138 L50 192"/><path d="M50 192 L48 207"/><path d="M154 84 L164 138"/><path d="M164 138 L170 192"/><path d="M170 192 L172 207"/></g><g fill="none" stroke-width="6" stroke-linecap="round"><path d="M94 224 L92 330"/><path d="M92 346 L93 466"/><path d="M93 470 L105 474"/><path d="M126 224 L128 330"/><path d="M128 346 L127 466"/><path d="M127 470 L115 474"/></g><circle cx="92" cy="338" r="5.5"/><circle cx="128" cy="338" r="5.5"/><g class="hs" data-part="skull"><circle class="hs-halo" cx="110" cy="30" r="10"/><circle class="hs-dot" cx="110" cy="30" r="6.5"/></g><g class="hs" data-part="spine"><circle class="hs-halo" cx="110" cy="120" r="10"/><circle class="hs-dot" cx="110" cy="120" r="6.5"/></g><g class="hs" data-part="scapula"><circle class="hs-halo" cx="84" cy="96" r="10"/><circle class="hs-dot" cx="84" cy="96" r="6.5"/></g><g class="hs" data-part="pelvis"><circle class="hs-halo" cx="110" cy="200" r="10"/><circle class="hs-dot" cx="110" cy="200" r="6.5"/></g></g><g class="layer" data-layer="1" fill="#cf4b47" stroke="#9e2f2b" stroke-width="1.2"><path d="M110 54 L147 78 L110 130 L73 78 Z" fill="#e0685f"/><circle cx="63" cy="82" r="11"/><circle cx="157" cy="82" r="11"/><ellipse cx="56" cy="120" rx="8" ry="21"/><ellipse cx="164" cy="120" rx="8" ry="21"/><path d="M80 118 Q108 138 108 192 L86 192 Q74 152 80 118 Z"/><path d="M140 118 Q112 138 112 192 L134 192 Q146 152 140 118 Z"/><ellipse cx="93" cy="208" rx="15" ry="13"/><ellipse cx="127" cy="208" rx="15" ry="13"/><ellipse cx="93" cy="290" rx="12" ry="38"/><ellipse cx="127" cy="290" rx="12" ry="38"/><ellipse cx="94" cy="404" rx="10" ry="27"/><ellipse cx="126" cy="404" rx="10" ry="27"/><g class="hs" data-part="traps"><circle class="hs-halo" cx="110" cy="86" r="10"/><circle class="hs-dot" cx="110" cy="86" r="6.5"/></g><g class="hs" data-part="glutes"><circle class="hs-halo" cx="93" cy="208" r="10"/><circle class="hs-dot" cx="93" cy="208" r="6.5"/></g><g class="hs" data-part="hamstrings"><circle class="hs-halo" cx="127" cy="290" r="10"/><circle class="hs-dot" cx="127" cy="290" r="6.5"/></g><g class="hs" data-part="calves"><circle class="hs-halo" cx="94" cy="404" r="10"/><circle class="hs-dot" cx="94" cy="404" r="6.5"/></g></g><g class="layer" data-layer="2"><ellipse cx="110" cy="28" rx="15" ry="11" fill="#eda9c6" stroke="#c4749c" stroke-width="1.4"/><path d="M100 24 Q105 20 110 24 Q115 28 120 24 M100 32 Q105 36 110 32" fill="none" stroke="#c4749c" stroke-width="1.2"/><path d="M104 84 Q78 82 75 110 Q73 140 88 149 Q103 153 104 136 Z" fill="#8fc1ec" stroke="#5b8ec4" stroke-width="1.4"/><path d="M116 84 Q142 82 145 110 Q147 140 132 149 Q117 153 116 136 Z" fill="#8fc1ec" stroke="#5b8ec4" stroke-width="1.4"/><ellipse cx="89" cy="166" rx="9" ry="13" fill="#a86ec9" stroke="#7d4b9e" stroke-width="1.4"/><ellipse cx="131" cy="166" rx="9" ry="13" fill="#a86ec9" stroke="#7d4b9e" stroke-width="1.4"/><g class="hs" data-part="brain"><circle class="hs-halo" cx="110" cy="28" r="10"/><circle class="hs-dot" cx="110" cy="28" r="6.5"/></g><g class="hs" data-part="lungs"><circle class="hs-halo" cx="84" cy="116" r="10"/><circle class="hs-dot" cx="84" cy="116" r="6.5"/></g><g class="hs" data-part="kidneys"><circle class="hs-halo" cx="131" cy="166" r="10"/><circle class="hs-dot" cx="131" cy="166" r="6.5"/></g></g></svg></div>
+              </div>
+            </div>
+          </div>
+          <div class="card" id="atlasInfo">
+            <h3 id="atlasInfoName"></h3>
+            <p id="atlasInfoText" class="sub" style="margin-bottom:0"></p>
+          </div>
+        </section>
       </main>
     </div>
 
@@ -758,7 +817,7 @@
     /* ================= i18n ================= */
     var STR = {
       en: {
-        today: "Today", tabToday: "Today", tabAdd: "Add food", tabActivity: "Activity", tabProgress: "Progress", tabGoal: "My goal",
+        today: "Today", tabToday: "Today", tabAdd: "Add food", tabActivity: "Activity", tabProgress: "Progress", tabGoal: "My goal", tabAtlas: "Body Atlas", atlasTitle: "3D Body Atlas", atlasSub: "Explore the human body layer by layer, like a medical anatomy atlas. Drag the slider to separate the layers, flip the body, and tap any glowing dot to learn about that part.", atlasSkeleton: "Skeleton", atlasMuscles: "Muscles", atlasOrgans: "Organs", atlasFlip: "Flip view", atlasTap: "Tap a glowing dot on the body", atlasFactBones: "206 bones", atlasFactMuscles: "600+ muscles", atlasFactSkin: "Skin: largest organ",
         nudgeTitle: "Set your daily goal first", nudgeText: "Enter your age, weight, height, activity and goal — SaveYourLife calculates your personal daily calorie target.", nudgeBtn: "Calculate my goal",
         remaining: "kcal remaining", stGoal: "Daily goal", stEaten: "Eaten", stBurned: "Burned (activity)",
         carbs: "Carbs", protein: "Protein", fat: "Fat",
@@ -811,7 +870,7 @@
         today_: "Today", yesterday: "Yesterday", tomorrow: "Tomorrow", delete: "Delete"
       },
       de: {
-        today: "Heute", tabToday: "Heute", tabAdd: "Essen", tabActivity: "Aktivität", tabProgress: "Verlauf", tabGoal: "Mein Ziel",
+        today: "Heute", tabToday: "Heute", tabAdd: "Essen", tabActivity: "Aktivität", tabProgress: "Verlauf", tabGoal: "Mein Ziel", tabAtlas: "Körperatlas", atlasTitle: "3D-Körperatlas", atlasSub: "Erkunde den menschlichen Körper Schicht für Schicht, wie in einem medizinischen Anatomieatlas. Ziehe den Regler, um die Schichten zu trennen, drehe den Körper und tippe auf einen leuchtenden Punkt, um mehr über diesen Teil zu erfahren.", atlasSkeleton: "Skelett", atlasMuscles: "Muskeln", atlasOrgans: "Organe", atlasFlip: "Ansicht drehen", atlasTap: "Tippe auf einen leuchtenden Punkt am Körper", atlasFactBones: "206 Knochen", atlasFactMuscles: "600+ Muskeln", atlasFactSkin: "Haut: größtes Organ",
         nudgeTitle: "Zuerst dein Tagesziel festlegen", nudgeText: "Alter, Gewicht, Größe, Aktivität und Ziel eingeben — SaveYourLife berechnet dein persönliches Kalorienziel.", nudgeBtn: "Mein Ziel berechnen",
         remaining: "kcal übrig", stGoal: "Tagesziel", stEaten: "Gegessen", stBurned: "Verbrannt (Aktivität)",
         carbs: "Kohlenhydrate", protein: "Eiweiß", fat: "Fett",
@@ -864,7 +923,7 @@
         today_: "Heute", yesterday: "Gestern", tomorrow: "Morgen", delete: "Löschen"
       },
       ar: {
-        today: "اليوم", tabToday: "اليوم", tabAdd: "إضافة أكل", tabActivity: "النشاط", tabProgress: "التقدم", tabGoal: "هدفي",
+        today: "اليوم", tabToday: "اليوم", tabAdd: "إضافة أكل", tabActivity: "النشاط", tabProgress: "التقدم", tabGoal: "هدفي", tabAtlas: "أطلس الجسم", atlasTitle: "أطلس الجسم ثلاثي الأبعاد", atlasSub: "اكتشف جسم الإنسان طبقة بطبقة، بحال أطلس التشريح الطبي. حرّك المؤشر باش تفرّق الطبقات، قلب الجسم، وضغط على أي نقطة مضيئة باش تعرف على داك العضو.", atlasSkeleton: "الهيكل العظمي", atlasMuscles: "العضلات", atlasOrgans: "الأعضاء", atlasFlip: "قلب العرض", atlasTap: "ضغط على نقطة مضيئة فالجسم", atlasFactBones: "206 عظمة", atlasFactMuscles: "أكثر من 600 عضلة", atlasFactSkin: "الجلد: أكبر عضو",
         nudgeTitle: "حدّد هدفك اليومي أولاً", nudgeText: "دخّل عمرك ووزنك وطولك ونشاطك وهدفك — وSaveYourLife غادي يحسب ليك هدف السعرات اليومي ديالك.", nudgeBtn: "احسب هدفي",
         remaining: "سعرة متبقية", stGoal: "الهدف اليومي", stEaten: "أكلت", stBurned: "حرقت (نشاط)",
         carbs: "الكربوهيدرات", protein: "البروتين", fat: "الدهون",
@@ -2062,6 +2121,83 @@
     fillGoalForm();
     renderAll();
     renderFasting();
+    </script>
+
+    <script>
+    /* ================= body atlas ================= */
+    (function () {
+      var ATLAS_PARTS = {
+        brain: { en: ["Brain", "Weighs about 1.4 kg and contains around 86 billion neurons. It uses roughly 20% of your energy, even while you rest."], de: ["Gehirn", "Wiegt etwa 1,4 kg und enthält rund 86 Milliarden Nervenzellen. Es verbraucht etwa 20 % deiner Energie – selbst im Ruhezustand."], ar: ["الدماغ", "كيوزن حوالي 1.4 كغ وفيه تقريبا 86 مليار خلية عصبية. كيستهلك حوالي 20% من طاقة الجسم، حتى ونتا مرتاح."] },
+        skull: { en: ["Skull", "Made of 22 fused bones. It protects the brain and gives your face its shape."], de: ["Schädel", "Besteht aus 22 verwachsenen Knochen. Er schützt das Gehirn und gibt dem Gesicht seine Form."], ar: ["الجمجمة", "مكوّنة من 22 عظمة ملتحمة. كتحمي الدماغ وكتعطي للوجه الشكل ديالو."] },
+        spine: { en: ["Spine", "A column of 33 vertebrae. It holds you upright and protects the spinal cord."], de: ["Wirbelsäule", "Eine Säule aus 33 Wirbeln. Sie hält dich aufrecht und schützt das Rückenmark."], ar: ["العمود الفقري", "سلسلة ديال 33 فقرة. كيشدّك واقف وكيحمي النخاع الشوكي."] },
+        ribs: { en: ["Ribcage", "12 pairs of ribs form a protective cage around the heart and lungs."], de: ["Brustkorb", "12 Rippenpaare bilden einen Schutzkäfig um Herz und Lunge."], ar: ["القفص الصدري", "12 زوج ديال الضلوع كيديرو قفص كيحمي القلب والرئتين."] },
+        scapula: { en: ["Shoulder blade (scapula)", "The flat triangular bone that anchors your arm and many back muscles."], de: ["Schulterblatt", "Der flache, dreieckige Knochen, an dem Arm und viele Rückenmuskeln ansetzen."], ar: ["لوح الكتف", "عظمة مسطحة مثلثة كتربط الذراع وبزاف ديال عضلات الظهر."] },
+        pelvis: { en: ["Pelvis", "Connects the spine to the legs, supports the upper body and protects the organs inside it."], de: ["Becken", "Verbindet Wirbelsäule und Beine, trägt den Oberkörper und schützt die Organe darin."], ar: ["الحوض", "كيربط العمود الفقري بالرجلين، كيهز الجزء الفوقاني ديال الجسم وكيحمي الأعضاء اللي لداخل."] },
+        femur: { en: ["Femur (thigh bone)", "The longest and strongest bone in the body – about a quarter of your height."], de: ["Oberschenkelknochen", "Der längste und stärkste Knochen des Körpers – etwa ein Viertel deiner Körpergröße."], ar: ["عظم الفخذ", "أطول وأقوى عظمة فالجسم – تقريبا ربع الطول ديالك."] },
+        pecs: { en: ["Chest muscles (pectorals)", "They power your pushing movements and help move the arms."], de: ["Brustmuskeln", "Sie liefern die Kraft zum Drücken und bewegen die Arme."], ar: ["عضلات الصدر", "كتعطي القوة لحركات الدفع وكتحرك الذراعين."] },
+        biceps: { en: ["Biceps", "The front arm muscle that bends the elbow and lifts loads."], de: ["Bizeps", "Der vordere Armmuskel – er beugt den Ellbogen und hebt Lasten."], ar: ["عضلة الذراع الأمامية", "العضلة اللي كتثني الكوع وكتهز الأثقال."] },
+        abs: { en: ["Abdominal muscles", "Your core: they support the spine, posture and breathing."], de: ["Bauchmuskeln", "Deine Körpermitte: Sie stützen Wirbelsäule, Haltung und Atmung."], ar: ["عضلات البطن", "هي المركز ديال الجسم: كتدعم العمود الفقري والوقفة والتنفس."] },
+        quads: { en: ["Quadriceps", "The big front-thigh group. It straightens the knee for walking, running and jumping."], de: ["Quadrizeps", "Die große Muskelgruppe vorne am Oberschenkel. Sie streckt das Knie – zum Gehen, Laufen und Springen."], ar: ["عضلات الفخذ الأمامية", "أكبر مجموعة عضلات فالفخذ من القدام. كتقوّم الركبة للمشي والجري والقفز."] },
+        traps: { en: ["Trapezius", "The large diamond-shaped back muscle that moves the neck, shoulders and shoulder blades."], de: ["Trapezmuskel", "Der große rautenförmige Rückenmuskel – bewegt Nacken, Schultern und Schulterblätter."], ar: ["عضلة الظهر العليا", "عضلة كبيرة على شكل معيّن فالظهر، كتحرك العنق والكتاف ولوحي الكتف."] },
+        glutes: { en: ["Glutes", "The gluteus maximus is the largest muscle in the body – it keeps you standing and powers walking and climbing."], de: ["Gesäßmuskeln", "Der Gluteus maximus ist der größte Muskel des Körpers – er hält dich aufrecht und treibt Gehen und Steigen an."], ar: ["عضلات المؤخرة", "العضلة الكبيرة فيهم هي أكبر عضلة فالجسم – كتخليك واقف وكتعطي القوة للمشي والطلوع."] },
+        hamstrings: { en: ["Hamstrings", "The back-thigh muscles that bend the knee and drive sprinting."], de: ["Beinbeuger", "Die Muskeln hinten am Oberschenkel – sie beugen das Knie und treiben den Sprint an."], ar: ["عضلات الفخذ الخلفية", "العضلات اللي ورا الفخذ، كتثني الركبة وكتعطي القوة فالجري السريع."] },
+        calves: { en: ["Calf muscles", "They push you forward when walking and jumping, and help pump blood back up to the heart."], de: ["Wadenmuskeln", "Sie stoßen dich beim Gehen und Springen ab und helfen, Blut zurück zum Herzen zu pumpen."], ar: ["عضلات الساق", "كتدفعك للقدام فالمشي والقفز، وكتعاون باش يرجع الدم للقلب."] },
+        heart: { en: ["Heart", "A fist-sized muscle that beats about 100,000 times a day and pumps roughly 7,500 liters of blood."], de: ["Herz", "Ein faustgroßer Muskel, der etwa 100.000-mal am Tag schlägt und rund 7.500 Liter Blut pumpt."], ar: ["القلب", "عضلة بحجم قبضة اليد، كتضرب حوالي 100 ألف مرة فالنهار وكتضخ تقريبا 7500 لتر ديال الدم."] },
+        lungs: { en: ["Lungs", "The right lung has 3 lobes, the left 2. Inside are hundreds of millions of tiny air sacs where oxygen enters the blood."], de: ["Lunge", "Die rechte Lunge hat 3, die linke 2 Lappen. Darin sitzen hunderte Millionen winziger Bläschen, wo Sauerstoff ins Blut übergeht."], ar: ["الرئتان", "الرئية اليمنى فيها 3 فصوص واليسرى 2. ولداخل كاينين مئات الملايين ديال الحويصلات الصغيرة فين كيدخل الأوكسجين للدم."] },
+        liver: { en: ["Liver", "The largest internal organ (about 1.5 kg). It filters the blood, stores energy and does hundreds of jobs."], de: ["Leber", "Das größte innere Organ (etwa 1,5 kg). Sie filtert das Blut, speichert Energie und erledigt hunderte Aufgaben."], ar: ["الكبد", "أكبر عضو داخلي (حوالي 1.5 كغ). كيصفّي الدم، كيخزن الطاقة، وكيدير مئات الوظائف."] },
+        stomach: { en: ["Stomach", "A muscular bag that stretches to about a liter. Acid and churning turn food into a paste."], de: ["Magen", "Ein Muskelsack, der sich auf etwa einen Liter dehnt. Säure und Bewegung verwandeln Essen in Brei."], ar: ["المعدة", "كيس عضلي كيتمدد حتى لحوالي لتر. الحمض والخلط كيحوّلو الماكلة لعجينة."] },
+        intestines: { en: ["Intestines", "The small intestine is about 6 meters long. Here most nutrients are absorbed into the blood."], de: ["Darm", "Der Dünndarm ist etwa 6 Meter lang. Hier werden die meisten Nährstoffe ins Blut aufgenommen."], ar: ["الأمعاء", "الأمعاء الدقيقة طولها حوالي 6 أمتار. هنا كيتم امتصاص أغلب العناصر الغذائية للدم."] },
+        kidneys: { en: ["Kidneys", "Two bean-shaped filters that clean about 180 liters of blood fluid a day and make urine."], de: ["Nieren", "Zwei bohnenförmige Filter, die täglich etwa 180 Liter Blutflüssigkeit reinigen und Urin bilden."], ar: ["الكليتان", "جوج مصفيات على شكل حبة الفاصوليا، كينقّيو حوالي 180 لتر ديال سوائل الدم فالنهار وكيديرو البول."] }
+      };
+      var ATLAS_DEFAULT = {
+        en: ["Explore the body", "Tap any glowing dot to learn what that part does."],
+        de: ["Erkunde den Körper", "Tippe auf einen leuchtenden Punkt, um zu erfahren, was dieser Teil tut."],
+        ar: ["اكتشف الجسم", "ضغط على أي نقطة مضيئة باش تعرف شنو كيدير داك العضو."]
+      };
+      var atlasLayer = 0, atlasCurrent = null;
+      function atlasLang() { return document.documentElement.lang || "en"; }
+      function atlasApplyLayer() {
+        document.querySelectorAll("#view-atlas g.layer").forEach(function (g) {
+          var on = +g.getAttribute("data-layer") === atlasLayer;
+          g.style.opacity = on ? "1" : "0.07";
+          g.style.pointerEvents = on ? "auto" : "none";
+        });
+        document.querySelectorAll("#atlasSeg button").forEach(function (b) { b.classList.toggle("on", +b.getAttribute("data-layer") === atlasLayer); });
+        var r = document.getElementById("atlasRange");
+        if (r && Math.abs(parseFloat(r.value) - atlasLayer) > 0.02) r.value = atlasLayer;
+      }
+      function atlasShow(id) {
+        var p = ATLAS_PARTS[id]; if (!p) return;
+        atlasCurrent = id;
+        var d = p[atlasLang()] || p.en;
+        document.getElementById("atlasInfoName").textContent = d[0];
+        document.getElementById("atlasInfoText").textContent = d[1];
+        document.querySelectorAll("#view-atlas .hs").forEach(function (h) { h.classList.toggle("sel", h.getAttribute("data-part") === id); });
+      }
+      function atlasDefault() {
+        var d = ATLAS_DEFAULT[atlasLang()] || ATLAS_DEFAULT.en;
+        document.getElementById("atlasInfoName").textContent = d[0];
+        document.getElementById("atlasInfoText").textContent = d[1];
+      }
+      document.getElementById("atlasSeg").addEventListener("click", function (e) {
+        var b = e.target.closest("button[data-layer]"); if (!b) return;
+        atlasLayer = +b.getAttribute("data-layer"); atlasApplyLayer();
+      });
+      var atlasRange = document.getElementById("atlasRange");
+      atlasRange.addEventListener("input", function () {
+        var v = Math.round(parseFloat(atlasRange.value));
+        if (v !== atlasLayer) { atlasLayer = v; atlasApplyLayer(); }
+      });
+      document.getElementById("atlasFlip").addEventListener("click", function () {
+        document.getElementById("atlasFlipInner").classList.toggle("flipped");
+      });
+      document.querySelectorAll("#view-atlas .hs").forEach(function (h) {
+        h.addEventListener("click", function () { atlasShow(h.getAttribute("data-part")); });
+      });
+      var langseg = document.querySelector(".langseg");
+      if (langseg) langseg.addEventListener("click", function () { setTimeout(function () { if (atlasCurrent) atlasShow(atlasCurrent); else atlasDefault(); }, 80); });
+      atlasApplyLayer(); atlasDefault();
+    })();
     </script>
   </body>
 </html>
