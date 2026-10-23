@@ -406,21 +406,9 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg>
           <span data-i18n="tabAdd">Add food</span>
         </button>
-        <button data-view="activity">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1 3-2 4.5-2 7a4.5 4.5 0 0 0 9 0c0-1.5-.5-2.5-1.2-3.7C17.5 7.5 16 9 15 9c.3-2-.8-4.5-3-6z"/><path d="M9.5 13.5A4.5 4.5 0 1 0 14 21"/></svg>
-          <span data-i18n="tabActivity">Activity</span>
-        </button>
         <button data-view="progress">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2" transform="translate(-1 0)"/></svg>
           <span data-i18n="tabProgress">Progress</span>
-        </button>
-        <button data-view="goal">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="0.5" fill="currentColor"/></svg>
-          <span data-i18n="tabGoal">My goal</span>
-        </button>
-        <button data-view="atlas">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2.4"/><path d="M12 8v5M12 13l-3 7M12 13l3 7M7 10.5l5-1.5 5 1.5"/></svg>
-          <span data-i18n="tabAtlas">Body Atlas</span>
         </button>
         <button data-view="workout">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6.5 6.5v11M17.5 6.5v11M3 9v6M21 9v6M6.5 12h11"/></svg>
@@ -487,6 +475,7 @@
               <h2 data-i18n="exTitle">Activity today</h2>
               <p class="sub" data-i18n="exText">Burned calories are added back to your daily budget.</p>
               <div id="todayExercises"></div>
+              <button class="btn ghost" id="toActivity" data-i18n="goActivity" style="margin-top:10px">Add activity</button>
             </div>
           </div>
 
@@ -571,6 +560,7 @@
 
         <!-- ============ ACTIVITY ============ -->
         <section class="view" id="view-activity">
+          <button class="btn ghost" data-back="today" data-i18n="goBack" style="margin-bottom:14px">Back</button>
           <div class="card">
             <h2 data-i18n="actTitle">Log activity</h2>
             <p class="sub" data-i18n="actText">Calories burned are estimated with MET values and your current weight, and added to today's budget.</p>
@@ -580,6 +570,7 @@
 
         <!-- ============ PROGRESS ============ -->
         <section class="view" id="view-progress">
+          <div class="btnrow" style="margin-bottom:14px"><button class="btn ghost" id="toGoal" data-i18n="goGoal">Goal settings</button></div>
           <div class="statgrid">
             <div class="sc"><span class="n" id="statAvg">–</span><span class="l" data-i18n="statAvg">Avg. kcal / day (30d)</span></div>
             <div class="sc"><span class="n" id="statDays">0</span><span class="l" data-i18n="statDays">Days logged</span></div>
@@ -611,6 +602,7 @@
 
         <!-- ============ GOAL ============ -->
         <section class="view" id="view-goal">
+          <button class="btn ghost" data-back="progress" data-i18n="goBack" style="margin-bottom:14px">Back</button>
           <div class="card">
             <h2 data-i18n="goalTitle">Your daily goal</h2>
             <p class="sub" data-i18n="goalText">Calculated with the Mifflin-St Jeor formula — the same method YAZIO publishes in its help center.</p>
@@ -708,6 +700,7 @@
       
         <!-- ============ BODY ATLAS ============ -->
         <section class="view" id="view-atlas">
+          <button class="btn ghost" data-back="workout" data-i18n="goBack" style="margin-bottom:14px">Back</button>
           <div class="card">
             <h2 data-i18n="atlasTitle">3D Body Atlas</h2>
             <p class="sub" data-i18n="atlasSub">Explore the human body layer by layer.</p>
@@ -772,6 +765,7 @@
             </div>
             <div id="woBest"></div>
             <div id="woList"></div>
+            <button class="btn ghost" id="toAtlas" data-i18n="goAtlas" style="margin-top:12px">Body Atlas</button>
           </div>
         </section>
       </main>
@@ -911,6 +905,7 @@
         woEx: "Exercise", woCustom: "New exercise name", woCustomPh: "e.g. Squat", woCustomOpt: "➕ New exercise…",
         woWeight: "Weight (kg)", woReps: "Reps", woSets: "Sets", woDate: "Date", woSave: "Save workout", woSaved: "Workout saved",
         woHistory: "History", woFilter: "Show", woAll: "All exercises", woEmpty: "No workouts logged yet.",
+        goActivity: "Add activity", goGoal: "Goal settings", goAtlas: "Body Atlas", goBack: "Back",
         today_: "Today", yesterday: "Yesterday", tomorrow: "Tomorrow", delete: "Delete"
       },
       de: {
@@ -968,6 +963,7 @@
         woEx: "Übung", woCustom: "Neuer Übungsname", woCustomPh: "z. B. Kniebeuge", woCustomOpt: "➕ Neue Übung…",
         woWeight: "Gewicht (kg)", woReps: "Wiederholungen", woSets: "Sätze", woDate: "Datum", woSave: "Training speichern", woSaved: "Training gespeichert",
         woHistory: "Verlauf", woFilter: "Anzeigen", woAll: "Alle Übungen", woEmpty: "Noch kein Training eingetragen.",
+        goActivity: "Aktivität hinzufügen", goGoal: "Zieleinstellungen", goAtlas: "Körperatlas", goBack: "Zurück",
         today_: "Heute", yesterday: "Gestern", tomorrow: "Morgen", delete: "Löschen"
       },
       ar: {
@@ -1025,6 +1021,7 @@
         woEx: "التمرين", woCustom: "اسم تمرين جديد", woCustomPh: "مثلاً سكوات", woCustomOpt: "➕ تمرين جديد…",
         woWeight: "الوزن (kg)", woReps: "التكرارات", woSets: "الجولات", woDate: "التاريخ", woSave: "حفظ التمرين", woSaved: "تحفظ التمرين",
         woHistory: "السجل", woFilter: "عرض", woAll: "كل التمارين", woEmpty: "ما زال ما تسجل حتى تمرين.",
+        goActivity: "إضافة نشاط", goGoal: "إعدادات هدفي", goAtlas: "أطلس الجسم", goBack: "رجوع",
         today_: "اليوم", yesterday: "البارح", tomorrow: "غداً", delete: "حذف"
       }
     };
@@ -1721,6 +1718,10 @@
     $("tabs").addEventListener("click", function (e) {
       var b = e.target.closest("button[data-view]"); if (b) showView(b.getAttribute("data-view"));
     });
+    $("toActivity").addEventListener("click", function () { showView("activity"); });
+    $("toGoal").addEventListener("click", function () { showView("goal"); });
+    $("toAtlas").addEventListener("click", function () { showView("atlas"); });
+    document.querySelectorAll("[data-back]").forEach(function (b) { b.addEventListener("click", function () { showView(b.getAttribute("data-back")); }); });
     $("nudgeBtn").addEventListener("click", function () { showView("goal"); });
     $("prevDay").addEventListener("click", function () { viewDate.setDate(viewDate.getDate() - 1); renderToday(); });
     $("nextDay").addEventListener("click", function () { viewDate.setDate(viewDate.getDate() + 1); renderToday(); });
