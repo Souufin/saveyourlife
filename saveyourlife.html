@@ -422,6 +422,10 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2.4"/><path d="M12 8v5M12 13l-3 7M12 13l3 7M7 10.5l5-1.5 5 1.5"/></svg>
           <span data-i18n="tabAtlas">Body Atlas</span>
         </button>
+        <button data-view="workout">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6.5 6.5v11M17.5 6.5v11M3 9v6M21 9v6M6.5 12h11"/></svg>
+          <span data-i18n="tabWorkout">Workout</span>
+        </button>
       </nav>
 
       <main>
@@ -734,6 +738,42 @@
             <p id="atlasInfoText" class="sub" style="margin-bottom:0"></p>
           </div>
         </section>
+
+        <!-- ============ WORKOUT ============ -->
+        <section class="view" id="view-workout">
+          <div class="card">
+            <h2 data-i18n="woTitle">Workout log</h2>
+            <p class="sub" data-i18n="woText">Log your lifts — weight, reps and sets — and watch each exercise get stronger over time.</p>
+            <div class="field">
+              <label data-i18n="woEx">Exercise</label>
+              <select id="woSelect"></select>
+            </div>
+            <div class="field hidden" id="woCustomWrap">
+              <label data-i18n="woCustom">New exercise name</label>
+              <input id="woCustom" type="text" data-i18n-ph="woCustomPh" placeholder="e.g. Squat" />
+            </div>
+            <div class="frow3">
+              <div class="field"><label data-i18n="woWeight">Weight (kg)</label><input id="woWeight" type="number" step="0.5" min="0" inputmode="decimal" /></div>
+              <div class="field"><label data-i18n="woReps">Reps</label><input id="woReps" type="number" min="1" max="100" inputmode="numeric" /></div>
+              <div class="field"><label data-i18n="woSets">Sets</label><input id="woSets" type="number" min="1" max="20" inputmode="numeric" value="4" /></div>
+            </div>
+            <div class="field">
+              <label data-i18n="woDate">Date</label>
+              <input id="woDate" type="date" />
+            </div>
+            <button class="btn" id="woAdd" data-i18n="woSave">Save workout</button>
+          </div>
+
+          <div class="card">
+            <h2 data-i18n="woHistory">History</h2>
+            <div class="field">
+              <label data-i18n="woFilter">Show</label>
+              <select id="woFilter"></select>
+            </div>
+            <div id="woBest"></div>
+            <div id="woList"></div>
+          </div>
+        </section>
       </main>
     </div>
 
@@ -867,6 +907,10 @@
         fastTitle: "Intermittent fasting", fastText: "Pick a fasting window and start the timer. It keeps counting while you use the app, even across days.",
         fastStart: "Start fast", fastStop: "End fast", fastEnds: "Ends at", fastElapsed: "elapsed", fastDone: "Fast complete — well done!",
         voiceListening: "Listening… say a food, e.g. “200 grams chicken”", voiceNo: "Voice input is not supported in this browser.",
+        tabWorkout: "Workout", woTitle: "Workout log", woText: "Log your lifts — weight, reps and sets — and watch each exercise get stronger over time.",
+        woEx: "Exercise", woCustom: "New exercise name", woCustomPh: "e.g. Squat", woCustomOpt: "➕ New exercise…",
+        woWeight: "Weight (kg)", woReps: "Reps", woSets: "Sets", woDate: "Date", woSave: "Save workout", woSaved: "Workout saved",
+        woHistory: "History", woFilter: "Show", woAll: "All exercises", woEmpty: "No workouts logged yet.",
         today_: "Today", yesterday: "Yesterday", tomorrow: "Tomorrow", delete: "Delete"
       },
       de: {
@@ -920,6 +964,10 @@
         fastTitle: "Intervallfasten", fastText: "Fastenfenster wählen und den Timer starten. Er zählt weiter, solange du die App nutzt — auch über Tage.",
         fastStart: "Fasten starten", fastStop: "Fasten beenden", fastEnds: "Endet um", fastElapsed: "vergangen", fastDone: "Fasten geschafft — gut gemacht!",
         voiceListening: "Ich höre zu… nenne ein Lebensmittel, z. B. „200 Gramm Hähnchen“", voiceNo: "Spracheingabe wird in diesem Browser nicht unterstützt.",
+        tabWorkout: "Training", woTitle: "Trainingslog", woText: "Trage deine Übungen ein — Gewicht, Wiederholungen und Sätze — und sieh, wie jede Übung stärker wird.",
+        woEx: "Übung", woCustom: "Neuer Übungsname", woCustomPh: "z. B. Kniebeuge", woCustomOpt: "➕ Neue Übung…",
+        woWeight: "Gewicht (kg)", woReps: "Wiederholungen", woSets: "Sätze", woDate: "Datum", woSave: "Training speichern", woSaved: "Training gespeichert",
+        woHistory: "Verlauf", woFilter: "Anzeigen", woAll: "Alle Übungen", woEmpty: "Noch kein Training eingetragen.",
         today_: "Heute", yesterday: "Gestern", tomorrow: "Morgen", delete: "Löschen"
       },
       ar: {
@@ -973,6 +1021,10 @@
         fastTitle: "الصيام المتقطع", fastText: "اختار مدة الصيام وبدا المؤقت. كيبقى يحسب ونتا كتستعمل الموقع، حتى عبر الأيام.",
         fastStart: "بدا الصيام", fastStop: "سالي الصيام", fastEnds: "كيسالي في", fastElapsed: "داز", fastDone: "كملتي الصيام — برافو عليك!",
         voiceListening: "كنسمع… قول شي ماكلة، مثال: «200 غرام دجاج»", voiceNo: "الإدخال بالصوت ما مدعومش في هاد المتصفح.",
+        tabWorkout: "التمارين", woTitle: "سجل التمارين", woText: "سجل التمارين ديالك — الوزن والتكرارات والجولات — وشوف كل تمرين كيفاش كيتطور.",
+        woEx: "التمرين", woCustom: "اسم تمرين جديد", woCustomPh: "مثلاً سكوات", woCustomOpt: "➕ تمرين جديد…",
+        woWeight: "الوزن (kg)", woReps: "التكرارات", woSets: "الجولات", woDate: "التاريخ", woSave: "حفظ التمرين", woSaved: "تحفظ التمرين",
+        woHistory: "السجل", woFilter: "عرض", woAll: "كل التمارين", woEmpty: "ما زال ما تسجل حتى تمرين.",
         today_: "اليوم", yesterday: "البارح", tomorrow: "غداً", delete: "حذف"
       }
     };
@@ -1379,11 +1431,19 @@
       ["boxing", 9.0, ["Boxing", "Boxen", "الملاكمة"]]
     ];
     var MEALS = ["breakfast", "lunch", "dinner", "snack"];
+    var WORKOUTS = [
+      ["deadlift", ["Deadlift", "Kreuzheben", "ديدليفت"]],
+      ["pullups", ["Pull-ups", "Klimmzüge", "العقلة"]],
+      ["barbellrow", ["Barbell row", "Langhantelrudern", "تجديف بالبار"]],
+      ["cablerow", ["Seated cable row", "Rudern am Kabel", "تجديف بالكابل"]],
+      ["facepulls", ["Face pulls", "Face Pulls", "فيس بول"]],
+      ["hyperext", ["Hyperextensions", "Hyperextensions", "هايبر إكستنشن"]]
+    ];
     var LANGIDX = { en: 0, de: 1, ar: 2 };
 
     /* ================= state ================= */
     var LSKEY = "saveyourlife.v1";
-    var state = { lang: "en", profile: null, days: {}, weights: [] };
+    var state = { lang: "en", profile: null, days: {}, weights: [], workouts: [] };
     try {
       var raw = localStorage.getItem(LSKEY);
       if (raw) { var parsed = JSON.parse(raw); if (parsed && typeof parsed === "object") state = Object.assign(state, parsed); }
@@ -1588,13 +1648,74 @@
       }
     }
 
-    function renderAll() { applyI18n(); renderToday(); renderCatalog($("searchInput").value); renderExercises(); renderProgress(); }
+    /* ================= workout log ================= */
+    function woNameOf(e) {
+      if (e.name.indexOf("custom:") === 0) return e.name.slice(7);
+      var found = null;
+      WORKOUTS.forEach(function (x) { if (x[0] === e.name) found = x; });
+      return found ? (found[1][LANGIDX[state.lang]] || found[1][0]) : e.name;
+    }
+    function renderWorkouts() {
+      if (!state.workouts) state.workouts = [];
+      var sel = $("woSelect"), cur = sel.value;
+      sel.innerHTML = WORKOUTS.map(function (x) { return '<option value="' + x[0] + '">' + esc(x[1][LANGIDX[state.lang]] || x[1][0]) + '</option>'; }).join("") +
+        '<option value="__custom">' + esc(t("woCustomOpt")) + '</option>';
+      if (cur) sel.value = cur;
+      $("woCustomWrap").classList.toggle("hidden", sel.value !== "__custom");
+      var filt = $("woFilter"), fcur = filt.value;
+      var names = [];
+      state.workouts.forEach(function (e) { var n = woNameOf(e); if (names.indexOf(n) === -1) names.push(n); });
+      filt.innerHTML = '<option value="__all">' + esc(t("woAll")) + '</option>' +
+        names.map(function (n) { return '<option value="' + esc(n) + '">' + esc(n) + '</option>'; }).join("");
+      if (fcur) filt.value = fcur;
+      var f = filt.value && filt.value !== "__all" ? filt.value : null;
+      var list = state.workouts.slice().sort(function (a, b) { return a.date < b.date ? 1 : a.date > b.date ? -1 : b.id - a.id; });
+      if (f) list = list.filter(function (e) { return woNameOf(e) === f; });
+      if (!state.workouts.length) {
+        $("woList").innerHTML = '<div class="empty">' + esc(t("woEmpty")) + '</div>';
+        $("woBest").innerHTML = "";
+      } else {
+        var best = {};
+        state.workouts.forEach(function (e) { var n = woNameOf(e); if (!best[n] || e.weight > best[n]) best[n] = e.weight; });
+        var bhtml = "";
+        Object.keys(best).forEach(function (n) { if (!f || f === n) bhtml += '<div class="sub">🏆 ' + esc(n) + ": " + best[n] + " kg</div>"; });
+        $("woBest").innerHTML = bhtml;
+        $("woList").innerHTML = list.length ? list.map(function (e) {
+          return '<div class="entry"><div class="en"><b>' + esc(woNameOf(e)) + '</b><small>' + esc(e.date) + '</small></div>' +
+            '<div class="ek">' + e.weight + " kg × " + e.reps + " × " + e.sets + '</div>' +
+            '<button class="del" data-delwo="' + e.id + '" aria-label="' + esc(t("delete")) + '">✕</button></div>';
+        }).join("") : '<div class="empty">' + esc(t("woEmpty")) + '</div>';
+      }
+      if (!$("woDate").value) $("woDate").value = dateKey(new Date());
+    }
+    $("woSelect").addEventListener("change", function () { $("woCustomWrap").classList.toggle("hidden", $("woSelect").value !== "__custom"); });
+    $("woAdd").addEventListener("click", function () {
+      var name = $("woSelect").value;
+      if (name === "__custom") {
+        var cn = $("woCustom").value.trim();
+        if (!cn) { $("woCustom").focus(); return; }
+        name = "custom:" + cn;
+      }
+      var w = parseFloat($("woWeight").value), r = parseInt($("woReps").value, 10), s = parseInt($("woSets").value, 10);
+      if (!w || w <= 0 || !r || r < 1 || !s || s < 1) return;
+      if (!state.workouts) state.workouts = [];
+      state.workouts.push({ id: Date.now(), date: $("woDate").value || dateKey(new Date()), name: name, weight: w, reps: r, sets: s });
+      save(); renderWorkouts(); toast(t("woSaved"));
+    });
+    $("woFilter").addEventListener("change", renderWorkouts);
+    $("woList").addEventListener("click", function (e) {
+      var del = e.target.closest("[data-delwo]");
+      if (del) { state.workouts = state.workouts.filter(function (x) { return String(x.id) !== del.getAttribute("data-delwo"); }); save(); renderWorkouts(); }
+    });
+
+    function renderAll() { applyI18n(); renderToday(); renderCatalog($("searchInput").value); renderExercises(); renderProgress(); renderWorkouts(); }
 
     /* ================= views / nav ================= */
     function showView(name) {
       document.querySelectorAll(".view").forEach(function (v) { v.classList.toggle("on", v.id === "view-" + name); });
       document.querySelectorAll("#tabs button").forEach(function (b) { b.classList.toggle("on", b.getAttribute("data-view") === name); });
       if (name === "progress") renderProgress();
+      if (name === "workout") renderWorkouts();
       window.scrollTo({ top: 0 });
     }
     $("tabs").addEventListener("click", function (e) {
